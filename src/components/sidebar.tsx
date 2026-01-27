@@ -71,7 +71,6 @@ export function Sidebar() {
   const [jobFunction, setJobFunction] = useQueryState('job_function')
   const [seniority, setSeniority] = useQueryState('seniority')
   const [jobTitle, setJobTitle] = useQueryState('job_title')
-  const [fullName, setFullName] = useQueryState('full_name')
 
   // Location Filters (URL Synced)
   const [personCountry, setPersonCountry] = useQueryState('person_country')
@@ -248,11 +247,12 @@ export function Sidebar() {
                 onValueChange={setIndustry}
                 endpoint="/api/filters/industries"
               />
-              <FilterField
+              <FilterFieldWithSuggestions
                 label="Company Size"
                 placeholder="e.g. 51-200"
                 value={companySize}
                 onValueChange={setCompanySize}
+                endpoint="/api/filters/employee-ranges"
               />
               <FilterField
                 label="Company Name"
@@ -282,28 +282,24 @@ export function Sidebar() {
             </CollapsibleTrigger>
             <CollapsibleContent className="space-y-3 pt-2 pb-2">
               <FilterField
-                label="Job Function"
-                placeholder="e.g. Sales, Marketing"
-                value={jobFunction}
-                onValueChange={setJobFunction}
-              />
-              <FilterField
-                label="Seniority"
-                placeholder="e.g. VP, Director"
-                value={seniority}
-                onValueChange={setSeniority}
-              />
-              <FilterField
                 label="Job Title"
                 placeholder="e.g. VP of Sales"
                 value={jobTitle}
                 onValueChange={setJobTitle}
               />
-              <FilterField
-                label="Full Name"
-                placeholder="Search by name"
-                value={fullName}
-                onValueChange={setFullName}
+              <FilterFieldWithSuggestions
+                label="Job Function"
+                placeholder="e.g. Sales, Marketing"
+                value={jobFunction}
+                onValueChange={setJobFunction}
+                endpoint="/api/filters/job-functions"
+              />
+              <FilterFieldWithSuggestions
+                label="Seniority"
+                placeholder="e.g. VP, Director"
+                value={seniority}
+                onValueChange={setSeniority}
+                endpoint="/api/filters/seniorities"
               />
             </CollapsibleContent>
           </Collapsible>
@@ -320,17 +316,19 @@ export function Sidebar() {
               </button>
             </CollapsibleTrigger>
             <CollapsibleContent className="space-y-3 pt-2 pb-2">
-              <FilterField
+              <FilterFieldWithSuggestions
                 label="Country"
                 placeholder="e.g. United States"
                 value={personCountry}
                 onValueChange={setPersonCountry}
+                endpoint="/api/filters/person-countries"
               />
-              <FilterField
+              <FilterFieldWithSuggestions
                 label="State"
                 placeholder="e.g. California"
                 value={personState}
                 onValueChange={setPersonState}
+                endpoint="/api/filters/person-states"
               />
               <FilterField
                 label="City"
@@ -434,11 +432,12 @@ export function Sidebar() {
                 value={roundType}
                 onValueChange={setRoundType}
               />
-              <FilterField
+              <FilterFieldWithSuggestions
                 label="VC Firm"
                 placeholder="e.g. Sequoia, a16z"
                 value={vcFirm}
                 onValueChange={setVcFirm}
+                endpoint="/api/filters/vc-firms"
               />
             </CollapsibleContent>
           </Collapsible>
