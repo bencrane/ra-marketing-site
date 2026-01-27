@@ -1,4 +1,21 @@
 import { useQueryState, parseAsBoolean, parseAsInteger } from "nuqs"
+import { useState, useCallback } from "react"
+
+// AI Filter types (matching the ai-search feature)
+export interface AiFilters {
+  job_title?: string[];
+  seniority?: string[];
+  job_function?: string[];
+  industry?: string[];
+  employee_range?: string[];
+  person_state?: string[];
+  person_city?: string[];
+  person_country?: string[];
+  company_name?: string[];
+  company_domain?: string[];
+  new_in_role?: boolean;
+  recently_promoted?: boolean;
+}
 
 /**
  * Filter keys that match API query params exactly
@@ -67,6 +84,14 @@ export interface ActiveFilter {
  * activeFilters.map(f => <FilterChip key={f.key} {...f} />)
  */
 export function useFilterState() {
+  // AI Filter state (not URL-synced, lives in memory)
+  const [aiFilters, setAiFiltersState] = useState<AiFilters | null>(null)
+  const [aiFilterDescription, setAiFilterDescription] = useState<string | null>(null)
+
+  // List filter state (filtering by a saved list)
+  const [listFilterId, setListFilterId] = useState<string | null>(null)
+  const [listFilterName, setListFilterName] = useState<string | null>(null)
+
   // Pagination
   const [limit, setLimit] = useQueryState("limit", parseAsInteger.withDefault(50))
   const [offset, setOffset] = useQueryState("offset", parseAsInteger.withDefault(0))
@@ -250,6 +275,71 @@ export function useFilterState() {
   addChips("person_state", "State", personState)
   addChips("person_city", "City", personCity)
 
+  // AI Filter actions
+  const setAiFilter = useCallback((filters: AiFilters, description: string) => {
+    setAiFiltersState(filters)
+    setAiFilterDescription(description)
+    // Clear list filter when AI filter is applied
+    setListFilterId(null)
+    setListFilterName(null)
+    setOffset(0) // Reset pagination when AI filter is applied
+  }, [setOffset])
+
+  const clearAiFilter = useCallback(() => {
+    setAiFiltersState(null)
+    setAiFilterDescription(null)
+  }, [])
+
+  // Check if AI filter is active
+  const isAiFilterActive = aiFilters !== null
+
+  // List Filter actions
+  const setListFilter = useCallback((listId: string, listName: string) => {
+    setListFilterId(listId)
+    setListFilterName(listName)
+    // Clear AI filter when list filter is applied
+    setAiFiltersState(null)
+    setAiFilterDescription(null)
+    setOffset(0) // Reset pagination when list filter is applied
+  }, [setOffset])
+
+  const clearListFilter = useCallback(() => {
+    setListFilterId(null)
+    setListFilterName(null)
+  }, [])
+
+  // Check if list filter is active
+  const isListFilterActive = listFilterId !== null
+
+  // Convert AI filters to the format expected by useLeads
+  const getAiFiltersForApi = useCallback(() => {
+    if (!aiFilters) return null
+    return {
+      limit,
+      offset,
+      // Signals
+      signal_new_in_role: aiFilters.new_in_role || false,
+      signal_recently_promoted: aiFilters.recently_promoted || false,
+      signal_at_vc_portfolio: false,
+      signal_worked_at_customer: false,
+      signal_past_employer: false,
+      // Company
+      industry: aiFilters.industry?.join(",") || null,
+      employee_range: aiFilters.employee_range?.join(",") || null,
+      company_name: aiFilters.company_name?.join(",") || null,
+      company_domain: aiFilters.company_domain?.join(",") || null,
+      // Person
+      job_function: aiFilters.job_function?.join(",") || null,
+      seniority: aiFilters.seniority?.join(",") || null,
+      job_title: aiFilters.job_title?.join(",") || null,
+      full_name: null,
+      // Location
+      person_country: aiFilters.person_country?.join(",") || null,
+      person_state: aiFilters.person_state?.join(",") || null,
+      person_city: aiFilters.person_city?.join(",") || null,
+    }
+  }, [aiFilters, limit, offset])
+
   return {
     // Raw filter values (for useLeads)
     filters,
@@ -307,5 +397,20 @@ export function useFilterState() {
     activeFilters,
     hasActiveFilters: activeFilters.length > 0,
     activeFilterCount: activeFilters.length,
+
+    // AI Filter state
+    aiFilters,
+    aiFilterDescription,
+    isAiFilterActive,
+    setAiFilter,
+    clearAiFilter,
+    getAiFiltersForApi,
+
+    // List Filter state
+    listFilterId,
+    listFilterName,
+    isListFilterActive,
+    setListFilter,
+    clearListFilter,
   }
 }
