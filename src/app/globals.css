@@ -3,123 +3,376 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/*
+ * REVENUE ACTIVATION DESIGN SYSTEM
+ * Premium design tokens adapted from Lovable mockup
+ * All colors use HSL for consistency
+ */
+
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  /* Core colors */
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  /* Sidebar */
+  --color-sidebar: hsl(var(--sidebar));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-primary: hsl(var(--sidebar-primary));
+  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-ring: hsl(var(--sidebar-ring));
+
+  /* Badge colors - semantic indicators */
+  --color-badge-new-role: hsl(var(--badge-new-role));
+  --color-badge-new-role-bg: hsl(var(--badge-new-role-bg));
+  --color-badge-customer: hsl(var(--badge-customer));
+  --color-badge-customer-bg: hsl(var(--badge-customer-bg));
+  --color-badge-funded: hsl(var(--badge-funded));
+  --color-badge-funded-bg: hsl(var(--badge-funded-bg));
+  --color-badge-promoted: hsl(var(--badge-promoted));
+  --color-badge-promoted-bg: hsl(var(--badge-promoted-bg));
+  --color-badge-vc: hsl(var(--badge-vc));
+  --color-badge-vc-bg: hsl(var(--badge-vc-bg));
+
+  /* Table colors */
+  --color-table-header: hsl(var(--table-header));
+  --color-table-row-hover: hsl(var(--table-row-hover));
+
+  /* Fonts */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
+
+  /* Border radius system */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --radius: 0.5rem;
+
+  /*
+   * DARK MODE (default for this app)
+   * True black background for bold, confident look
+   * Forest green accent for energy and trust
+   */
+  --background: 0 0% 0%;
+  --foreground: 0 0% 100%;
+
+  --card: 0 0% 4%;
+  --card-foreground: 0 0% 100%;
+
+  --popover: 0 0% 4%;
+  --popover-foreground: 0 0% 100%;
+
+  /* Forest green - primary brand color */
+  --primary: 152 55% 40%;
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 0 0% 10%;
+  --secondary-foreground: 0 0% 100%;
+
+  --muted: 0 0% 12%;
+  --muted-foreground: 0 0% 65%;
+
+  --accent: 152 55% 40%;
+  --accent-foreground: 0 0% 100%;
+
+  --destructive: 0 65% 50%;
+
+  --border: 0 0% 16%;
+  --input: 0 0% 16%;
+  --ring: 152 55% 40%;
+
+  /* Sidebar - slightly elevated from background */
+  --sidebar: 0 0% 6%;
+  --sidebar-foreground: 0 0% 95%;
+  --sidebar-primary: 152 55% 40%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 0 0% 12%;
+  --sidebar-accent-foreground: 0 0% 100%;
+  --sidebar-border: 0 0% 14%;
+  --sidebar-ring: 152 55% 40%;
+
+  /*
+   * Badge colors - semantic meaning
+   * Each signal type has distinct color identity
+   */
+  /* New in Role - Green (growth, change) */
+  --badge-new-role: 152 50% 55%;
+  --badge-new-role-bg: 152 40% 12%;
+
+  /* Worked at Customer - Teal (relationship, trust) */
+  --badge-customer: 175 55% 45%;
+  --badge-customer-bg: 175 40% 12%;
+
+  /* Recently Funded - Purple (wealth, opportunity) */
+  --badge-funded: 271 60% 65%;
+  --badge-funded-bg: 271 40% 15%;
+
+  /* Recently Promoted - Amber (success, achievement) */
+  --badge-promoted: 40 70% 55%;
+  --badge-promoted-bg: 40 50% 12%;
+
+  /* At VC Portfolio - Blue (corporate, established) */
+  --badge-vc: 210 60% 55%;
+  --badge-vc-bg: 210 40% 12%;
+
+  /* Table colors */
+  --table-header: 0 0% 4%;
+  --table-row-hover: 0 0% 6%;
 }
 
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+/* Light mode override (if needed later) */
+.light {
+  --background: 0 0% 98%;
+  --foreground: 0 0% 10%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 10%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 10%;
+
+  --primary: 152 55% 40%;
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 0 0% 96%;
+  --secondary-foreground: 0 0% 10%;
+
+  --muted: 0 0% 96%;
+  --muted-foreground: 0 0% 45%;
+
+  --accent: 152 55% 40%;
+  --accent-foreground: 0 0% 100%;
+
+  --destructive: 0 84% 60%;
+
+  --border: 0 0% 90%;
+  --input: 0 0% 90%;
+  --ring: 152 55% 40%;
+
+  --sidebar: 0 0% 100%;
+  --sidebar-foreground: 0 0% 10%;
+  --sidebar-primary: 0 0% 10%;
+  --sidebar-primary-foreground: 0 0% 98%;
+  --sidebar-accent: 0 0% 96%;
+  --sidebar-accent-foreground: 0 0% 10%;
+  --sidebar-border: 0 0% 90%;
+  --sidebar-ring: 152 55% 40%;
+
+  /* Badge colors - Light mode */
+  --badge-new-role: 152 55% 35%;
+  --badge-new-role-bg: 152 45% 92%;
+  --badge-customer: 175 55% 35%;
+  --badge-customer-bg: 175 45% 92%;
+  --badge-funded: 271 70% 50%;
+  --badge-funded-bg: 271 65% 92%;
+  --badge-promoted: 40 70% 45%;
+  --badge-promoted-bg: 40 60% 92%;
+  --badge-vc: 210 60% 45%;
+  --badge-vc-bg: 210 50% 92%;
+
+  --table-header: 0 0% 98%;
+  --table-row-hover: 0 0% 96%;
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
   }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+  }
+}
+
+@layer components {
+  /*
+   * PREMIUM CARD EFFECTS
+   * Subtle shadows and hover glows for depth
+   */
+  .card-elevated {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3),
+                0 1px 2px -1px rgba(0, 0, 0, 0.3);
+  }
+
+  .card-glow {
+    transition: box-shadow 0.2s ease-out;
+  }
+
+  .card-glow:hover {
+    box-shadow: 0 0 24px hsl(152 55% 40% / 0.25);
+  }
+
+  .card-glow-danger:hover {
+    box-shadow: 0 0 24px hsl(0 65% 50% / 0.25);
+  }
+
+  /*
+   * BUTTON GLOW EFFECTS
+   */
+  .btn-glow {
+    transition: box-shadow 0.2s ease-out;
+  }
+
+  .btn-glow:hover {
+    box-shadow: 0 0 20px hsl(152 55% 40% / 0.4);
+  }
+
+  /*
+   * TABLE STYLES
+   * Clean, premium table appearance
+   */
+  .table-premium {
+    @apply w-full;
+  }
+
+  .table-premium thead {
+    @apply bg-table-header;
+  }
+
+  .table-premium tbody tr {
+    @apply transition-colors;
+  }
+
+  .table-premium tbody tr:hover {
+    @apply bg-table-row-hover;
+  }
+
+  /*
+   * FILTER CHIP STYLES
+   * Tags for active filters
+   */
+  .filter-chip {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-md;
+    @apply bg-secondary text-secondary-foreground;
+    @apply transition-colors;
+  }
+
+  .filter-chip:hover {
+    @apply bg-muted;
+  }
+
+  .filter-chip-remove {
+    @apply h-3.5 w-3.5 rounded-sm opacity-70 hover:opacity-100 hover:bg-muted;
+  }
+
+  /*
+   * BADGE VARIANTS
+   * Semantic colors for intelligence signals
+   */
+  .badge-new-role {
+    @apply bg-badge-new-role-bg text-badge-new-role;
+  }
+
+  .badge-customer {
+    @apply bg-badge-customer-bg text-badge-customer;
+  }
+
+  .badge-funded {
+    @apply bg-badge-funded-bg text-badge-funded;
+  }
+
+  .badge-promoted {
+    @apply bg-badge-promoted-bg text-badge-promoted;
+  }
+
+  .badge-vc {
+    @apply bg-badge-vc-bg text-badge-vc;
+  }
+
+  /*
+   * SIDEBAR STYLES
+   */
+  .sidebar-section-header {
+    @apply text-[11px] font-semibold text-muted-foreground uppercase tracking-wider;
+  }
+
+  .sidebar-section-header:hover {
+    @apply text-foreground/80;
+  }
+}
+
+@layer utilities {
+  /*
+   * ANIMATIONS
+   * Consistent micro-interactions
+   */
+  @keyframes slide-down {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .animate-slide-down {
+    animation: slide-down 0.15s ease-out;
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.15s ease-out;
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.15s ease-out;
+  }
+
+  /*
+   * FOCUS STATES
+   * Accessible focus rings
+   */
+  .focus-ring {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+
+  /*
+   * TEXT UTILITIES
+   */
+  .text-balance {
+    text-wrap: balance;
   }
 }
