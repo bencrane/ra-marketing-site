@@ -144,9 +144,9 @@ export function Sidebar() {
         onMouseLeave={() => setHovered(false)}
       >
         {/* Header */}
-        <div className="h-14 px-4 flex items-center justify-between">
+        <div className="h-14 px-4 flex items-center justify-center relative">
           <h1 className="text-base font-semibold tracking-tight text-foreground">Revenue Activation</h1>
-          <div className="flex items-center gap-1">
+          <div className="absolute right-4 flex items-center gap-1">
             <button
               onClick={toggle}
               className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
