@@ -169,9 +169,9 @@ export function Sidebar() {
           </div>
         </div>
 
-      {/* List Selector */}
-      <div className="px-4 py-3 border-b border-border">
-        <button className="flex w-full items-center justify-between px-3 py-2 text-sm font-medium rounded-md bg-secondary/50 hover:bg-secondary text-foreground transition-colors">
+      {/* List Selector - matches toolbar height (h-11) */}
+      <div className="h-11 px-4 flex items-center border-b border-border">
+        <button className="flex w-full items-center justify-between px-3 py-1.5 text-sm font-medium rounded-md bg-secondary/50 hover:bg-secondary text-foreground transition-colors">
           <span>All Leads</span>
           <ChevronDown className="h-4 w-4 text-muted-foreground" />
         </button>
