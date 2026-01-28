@@ -170,9 +170,12 @@ export function Sidebar() {
           </div>
         </div>
 
-      {/* View Label - matches table header height (h-11) */}
+      {/* List Selector - matches table header height (h-11) */}
       <div className="h-11 px-4 flex items-center border-b border-border">
-        <span className="text-sm font-medium text-foreground">All Leads</span>
+        <button className="flex flex-1 items-center justify-between px-3 py-1.5 text-sm font-medium rounded-md bg-secondary/30 hover:bg-secondary/50 text-foreground transition-colors">
+          <span>All Leads</span>
+          <ChevronDown className="h-4 w-4 text-muted-foreground" />
+        </button>
       </div>
 
       <ScrollArea className="flex-1 min-h-0">
