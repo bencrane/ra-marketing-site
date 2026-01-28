@@ -2,6 +2,7 @@
 
 import { Suspense } from "react"
 import Link from "next/link"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Building2, User, X, SlidersHorizontal, ListPlus, Eye, EyeOff, Sparkles, Inbox, List, LogOut } from "lucide-react"
 import * as React from "react"
 import { Lead } from "@/features/leads"
@@ -14,6 +15,9 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { cn } from "@/lib/utils"
 
 function LeadsPageInner() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
   // All filter state consolidated in one hook
   const {
     filters,
@@ -53,6 +57,14 @@ function LeadsPageInner() {
   // Secret company modal state
   const [secretCompanyOpen, setSecretCompanyOpen] = React.useState(false)
   const [targetCompany, setTargetCompany] = React.useState<{ companyName?: string; companyDomain?: string } | null>(null)
+
+  // Read company from URL on mount
+  React.useEffect(() => {
+    const companyParam = searchParams.get("company")
+    if (companyParam && !targetCompany) {
+      setTargetCompany({ companyName: companyParam })
+    }
+  }, [searchParams, targetCompany])
 
   // Cmd+K keyboard shortcut
   React.useEffect(() => {
@@ -347,7 +359,14 @@ function LeadsPageInner() {
         onOpenChange={setSecretCompanyOpen}
         onSave={(data) => {
           setTargetCompany(data)
-          console.log("Target company saved:", data)
+          // Update URL with company name (lowercase, no spaces)
+          const companySlug = (data.companyName || data.companyDomain || "")
+            .toLowerCase()
+            .replace(/\s+/g, "-")
+            .replace(/[^a-z0-9-]/g, "")
+          if (companySlug) {
+            router.push(`/leads?company=${companySlug}`)
+          }
         }}
       />
     </div>
