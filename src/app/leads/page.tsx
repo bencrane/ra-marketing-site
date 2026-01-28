@@ -358,15 +358,9 @@ function LeadsPageInner() {
         open={secretCompanyOpen}
         onOpenChange={setSecretCompanyOpen}
         onSave={(data) => {
-          setTargetCompany(data)
-          // Update URL with company name (lowercase, no spaces)
-          const companySlug = (data.companyName || data.companyDomain || "")
-            .toLowerCase()
-            .replace(/\s+/g, "-")
-            .replace(/[^a-z0-9-]/g, "")
-          if (companySlug) {
-            router.push(`/leads?company=${companySlug}`)
-          }
+          setTargetCompany({ companyDomain: data.companyDomain })
+          // Update URL with domain
+          router.push(`/leads?company=${encodeURIComponent(data.companyDomain)}`)
         }}
       />
     </div>
