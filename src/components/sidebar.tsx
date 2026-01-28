@@ -144,9 +144,9 @@ export function Sidebar() {
         onMouseLeave={() => setHovered(false)}
       >
         {/* Header */}
-        <div className="h-14 px-4 flex items-center justify-center relative">
+        <div className="h-14 px-4 flex items-center justify-between border-b border-border">
           <h1 className="text-base font-semibold tracking-tight text-foreground">Revenue Activation</h1>
-          <div className="absolute right-4 flex items-center gap-1">
+          <div className="flex items-center gap-1">
             <button
               onClick={toggle}
               className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
@@ -169,9 +169,9 @@ export function Sidebar() {
           </div>
         </div>
 
-      {/* List Selector - matches table header height (h-11) */}
-      <div className="h-11 px-4 flex items-center border-b border-border">
-        <button className="flex flex-1 items-center justify-between py-1.5 text-sm font-medium text-foreground hover:text-foreground/80 transition-colors">
+      {/* List Selector */}
+      <div className="px-4 py-3 border-b border-border">
+        <button className="flex w-full items-center justify-between px-3 py-2 text-sm font-medium rounded-md bg-secondary/50 hover:bg-secondary text-foreground transition-colors">
           <span>All Leads</span>
           <ChevronDown className="h-4 w-4 text-muted-foreground" />
         </button>
