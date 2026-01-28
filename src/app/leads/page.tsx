@@ -2,7 +2,7 @@
 
 import { Suspense } from "react"
 import Link from "next/link"
-import { Building2, User, X, SlidersHorizontal, ListPlus, Eye, EyeOff, Sparkles, Inbox, List } from "lucide-react"
+import { Building2, User, X, SlidersHorizontal, ListPlus, Eye, EyeOff, Sparkles, Inbox, List, LogOut } from "lucide-react"
 import * as React from "react"
 import { Lead } from "@/features/leads"
 import { DataTable, columns, useLeads, AddToListModal, ViewListsModal } from "@/features/leads"
@@ -112,6 +112,19 @@ function LeadsPageInner() {
               <Inbox className="h-4 w-4" />
               Inbox
             </Link>
+
+            {/* Sign Out */}
+            <button
+              onClick={() => {
+                localStorage.removeItem("session_token");
+                localStorage.removeItem("access_token");
+                window.location.href = "/sign-in";
+              }}
+              className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md border border-border text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors"
+              title="Sign out"
+            >
+              <LogOut className="h-4 w-4" />
+            </button>
 
             {/* AI Search Button */}
             <button
