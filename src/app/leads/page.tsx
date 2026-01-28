@@ -189,6 +189,7 @@ function LeadsPageInner() {
                 onClick={() => {
                   localStorage.removeItem("session_token");
                   localStorage.removeItem("access_token");
+                  document.cookie = "session_token=; path=/; max-age=0";
                   window.location.href = "/sign-in";
                 }}
                 className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md border border-border text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors"

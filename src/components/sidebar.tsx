@@ -249,16 +249,16 @@ export function Sidebar() {
                 endpoint="/api/filters/employee-ranges"
               />
               <FilterField
-                label="Company Name"
-                placeholder="Enter company name"
-                value={companyName}
-                onValueChange={setCompanyName}
-              />
-              <FilterField
                 label="Company Domain"
                 placeholder="e.g. stripe.com"
                 value={companyDomain}
                 onValueChange={setCompanyDomain}
+              />
+              <FilterField
+                label="Company Name"
+                placeholder="Enter company name"
+                value={companyName}
+                onValueChange={setCompanyName}
               />
             </CollapsibleContent>
           </Collapsible>
@@ -619,6 +619,7 @@ export function Sidebar() {
           onClick={() => {
             localStorage.removeItem("session_token");
             localStorage.removeItem("access_token");
+            document.cookie = "session_token=; path=/; max-age=0";
             window.location.href = "/sign-in";
           }}
           className="w-full flex items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary/40 rounded-lg transition-colors"

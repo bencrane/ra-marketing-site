@@ -34,15 +34,15 @@ function VerifyContent() {
 
         const data = await response.json();
 
-        // Store the session token
-        if (data.session_token) {
-          localStorage.setItem("session_token", data.session_token);
+        // Store the session token in localStorage and cookie
+        const token = data.session_token || data.token;
+        if (token) {
+          localStorage.setItem("session_token", token);
+          // Set cookie for middleware auth check (30 days)
+          document.cookie = `session_token=${token}; path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`;
         }
         if (data.access_token) {
           localStorage.setItem("access_token", data.access_token);
-        }
-        if (data.token) {
-          localStorage.setItem("session_token", data.token);
         }
 
         setState("success");
