@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import Link from "next/link";
-import { ArrowLeft, Users, RefreshCw } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import {
   InboxSidebar,
   MessageList,
@@ -248,59 +247,56 @@ export default function InboxPage() {
   const unreadCount = threads.filter((t) => !t.isRead && t.folder === "inbox").length;
 
   return (
-    <div className="flex flex-col h-screen bg-background text-foreground">
-      {/* Header */}
-      <header className="h-14 border-b border-border/50 bg-background flex items-center justify-between px-6 shrink-0">
-        <div className="flex items-center gap-4">
-          <Link
-            href="/leads"
-            className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to Leads
-          </Link>
-          <div className="h-5 w-px bg-border/50" />
-          <h1 className="text-lg font-semibold text-foreground">Inbox</h1>
-          {unreadCount > 0 && (
-            <span className="px-2 py-0.5 text-xs font-medium bg-primary/10 text-primary rounded-full">
-              {unreadCount} unread
+    <div className="flex h-screen bg-background text-foreground">
+      {/* Sidebar */}
+      <InboxSidebar
+        filters={filters}
+        onFiltersChange={setFilters}
+        campaigns={MOCK_CAMPAIGNS}
+        senderAccounts={MOCK_SENDER_ACCOUNTS}
+      />
+
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col h-screen overflow-hidden ml-[280px]">
+        {/* Header row - aligned with sidebar header */}
+        <div className="h-14 flex items-center px-6 border-b border-border shrink-0">
+          <div className="flex items-center gap-3">
+            <span className="text-sm font-medium text-foreground">
+              {filteredThreads.length} Conversations
             </span>
-          )}
+            {unreadCount > 0 && (
+              <span className="px-2 py-0.5 text-xs font-medium bg-primary/10 text-primary rounded-full">
+                {unreadCount} unread
+              </span>
+            )}
+          </div>
+          <div className="ml-auto">
+            <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground h-8">
+              <RefreshCw className="h-4 w-4" />
+              Refresh
+            </Button>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground">
-            <RefreshCw className="h-4 w-4" />
-            Refresh
-          </Button>
-        </div>
-      </header>
 
-      {/* Main Content - 3 Panel Layout */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Left Sidebar - Filters */}
-        <InboxSidebar
-          filters={filters}
-          onFiltersChange={setFilters}
-          campaigns={MOCK_CAMPAIGNS}
-          senderAccounts={MOCK_SENDER_ACCOUNTS}
-        />
+        {/* Content - 2 panel layout */}
+        <div className="flex flex-1 overflow-hidden">
+          {/* Message List */}
+          <div className="w-[380px] border-r border-border flex flex-col bg-card/30">
+            <MessageList
+              threads={filteredThreads}
+              selectedThreadId={selectedThreadId}
+              onSelectThread={setSelectedThreadId}
+            />
+          </div>
 
-        {/* Middle Panel - Message List */}
-        <div className="w-[380px] border-r border-border/50 flex flex-col bg-card/30">
-          <MessageList
-            threads={filteredThreads}
-            selectedThreadId={selectedThreadId}
-            onSelectThread={setSelectedThreadId}
+          {/* Message Detail */}
+          <MessageDetail
+            thread={selectedThread}
+            onStatusChange={handleStatusChange}
+            onReply={handleReply}
           />
         </div>
-
-        {/* Right Panel - Message Detail */}
-        <MessageDetail
-          thread={selectedThread}
-          onStatusChange={handleStatusChange}
-          onReply={handleReply}
-        />
-      </div>
+      </main>
     </div>
   );
 }

@@ -9,6 +9,9 @@ import {
   Star,
   ThumbsDown,
   Clock,
+  PanelLeftClose,
+  Lock,
+  ChevronDown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -18,7 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { InboxFilters, Folder, MessageStatus, ReadState } from "../types";
+import type { InboxFilters, Folder, MessageStatus } from "../types";
 
 interface InboxSidebarProps {
   filters: InboxFilters;
@@ -54,31 +57,47 @@ export function InboxSidebar({
   };
 
   return (
-    <div className="w-[260px] h-full border-r border-border/50 bg-sidebar flex flex-col">
+    <div className="fixed left-0 top-0 h-screen w-[280px] border-r border-border bg-sidebar flex flex-col z-30">
       {/* Header */}
-      <div className="px-5 pt-6 pb-4 shrink-0">
-        <h2 className="text-sm font-semibold text-foreground">Filters</h2>
+      <div className="h-14 px-4 flex items-center justify-between border-b border-border shrink-0">
+        <span className="text-base font-semibold tracking-tight text-foreground">Revenue Activation</span>
+        <div className="flex items-center gap-1">
+          <button className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
+            <PanelLeftClose className="h-4 w-4" />
+          </button>
+          <button className="p-1.5 rounded-md text-foreground hover:bg-secondary transition-colors">
+            <Lock className="h-4 w-4" />
+          </button>
+        </div>
       </div>
 
-      {/* Search */}
-      <div className="px-4 pb-6">
-        <div className="relative group">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/60 transition-colors group-focus-within:text-muted-foreground" />
-          <input
-            type="text"
-            placeholder="Search messages..."
-            value={filters.search}
-            onChange={(e) => updateFilter("search", e.target.value)}
-            className="w-full h-10 pl-10 pr-4 rounded-lg border border-border/50 bg-background/50 text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 text-sm transition-all"
-          />
-        </div>
+      {/* Inbox Selector */}
+      <div className="h-11 px-4 flex items-center border-b border-border shrink-0">
+        <button className="flex w-full items-center justify-between px-3 py-1.5 text-sm font-medium rounded-md bg-secondary/50 hover:bg-secondary text-foreground transition-colors">
+          <span>Inbox</span>
+          <ChevronDown className="h-4 w-4 text-muted-foreground" />
+        </button>
       </div>
 
       {/* Scrollable content */}
       <div className="flex-1 overflow-y-auto">
-        {/* Folders Section */}
-        <div className="px-4 pb-6">
-          <h3 className="px-2 mb-3 text-[11px] font-semibold text-muted-foreground/70 uppercase tracking-widest">
+        {/* Search */}
+        <div className="px-4 py-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/60" />
+            <input
+              type="text"
+              placeholder="Search messages..."
+              value={filters.search}
+              onChange={(e) => updateFilter("search", e.target.value)}
+              className="w-full h-9 pl-10 pr-4 rounded-lg border border-border bg-background/50 text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 text-sm"
+            />
+          </div>
+        </div>
+
+        {/* Folders */}
+        <div className="px-4 pb-4">
+          <h3 className="px-2 mb-2 text-[11px] font-semibold text-muted-foreground/70 uppercase tracking-widest">
             Folders
           </h3>
           <div className="space-y-1">
@@ -87,23 +106,18 @@ export function InboxSidebar({
                 key={folder.id}
                 onClick={() => updateFilter("folder", folder.id)}
                 className={cn(
-                  "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150",
+                  "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
                   filters.folder === folder.id
-                    ? "bg-primary text-primary-foreground shadow-sm"
-                    : "text-foreground/80 hover:bg-secondary/60 hover:text-foreground"
+                    ? "bg-primary text-primary-foreground"
+                    : "text-foreground/80 hover:bg-secondary/60"
                 )}
               >
-                <folder.icon className={cn(
-                  "h-4 w-4 shrink-0",
-                  filters.folder === folder.id ? "opacity-100" : "opacity-60"
-                )} />
+                <folder.icon className="h-4 w-4 shrink-0" />
                 <span className="flex-1 text-left">{folder.label}</span>
                 {folder.count !== undefined && (
                   <span className={cn(
                     "text-xs tabular-nums",
-                    filters.folder === folder.id
-                      ? "text-primary-foreground/70"
-                      : "text-muted-foreground/60"
+                    filters.folder === folder.id ? "text-primary-foreground/70" : "text-muted-foreground/60"
                   )}>
                     {folder.count}
                   </span>
@@ -113,42 +127,37 @@ export function InboxSidebar({
           </div>
         </div>
 
-        {/* Divider */}
-        <div className="mx-4 mb-6 border-t border-border/30" />
+        <div className="mx-4 mb-4 border-t border-border/30" />
 
-        {/* Status Section */}
-        <div className="px-4 pb-6">
-          <h3 className="px-2 mb-3 text-[11px] font-semibold text-muted-foreground/70 uppercase tracking-widest">
+        {/* Status */}
+        <div className="px-4 pb-4">
+          <h3 className="px-2 mb-2 text-[11px] font-semibold text-muted-foreground/70 uppercase tracking-widest">
             Filter by Status
           </h3>
           <div className="space-y-1">
             {STATUSES.map((status) => (
               <button
-                key={status.id ?? "null"}
+                key={status.id}
                 onClick={() => updateFilter("status", filters.status === status.id ? "all" : status.id)}
                 className={cn(
-                  "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150",
+                  "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
                   filters.status === status.id
                     ? "bg-secondary text-foreground"
-                    : "text-muted-foreground hover:bg-secondary/40 hover:text-foreground"
+                    : "text-muted-foreground hover:bg-secondary/40"
                 )}
               >
-                <status.icon className={cn(
-                  "h-4 w-4 shrink-0",
-                  filters.status === status.id ? "opacity-100" : "opacity-50"
-                )} />
+                <status.icon className="h-4 w-4 shrink-0" />
                 <span className="flex-1 text-left">{status.label}</span>
               </button>
             ))}
           </div>
         </div>
 
-        {/* Divider */}
-        <div className="mx-4 mb-6 border-t border-border/30" />
+        <div className="mx-4 mb-4 border-t border-border/30" />
 
-        {/* Read State Toggle */}
-        <div className="px-4 pb-6">
-          <h3 className="px-2 mb-3 text-[11px] font-semibold text-muted-foreground/70 uppercase tracking-widest">
+        {/* Read State */}
+        <div className="px-4 pb-4">
+          <h3 className="px-2 mb-2 text-[11px] font-semibold text-muted-foreground/70 uppercase tracking-widest">
             Read State
           </h3>
           <div className="flex rounded-lg bg-secondary/40 p-1">
@@ -157,7 +166,7 @@ export function InboxSidebar({
                 key={state}
                 onClick={() => updateFilter("readState", state)}
                 className={cn(
-                  "flex-1 px-3 py-2 text-xs font-semibold rounded-md transition-all duration-150 capitalize",
+                  "flex-1 px-3 py-1.5 text-xs font-semibold rounded-md transition-colors capitalize",
                   filters.readState === state
                     ? "bg-background text-foreground shadow-sm"
                     : "text-muted-foreground hover:text-foreground"
@@ -169,53 +178,41 @@ export function InboxSidebar({
           </div>
         </div>
 
-        {/* Divider */}
-        <div className="mx-4 mb-6 border-t border-border/30" />
+        <div className="mx-4 mb-4 border-t border-border/30" />
 
-        {/* Campaign Select */}
-        <div className="px-4 pb-6">
-          <h3 className="px-2 mb-3 text-[11px] font-semibold text-muted-foreground/70 uppercase tracking-widest">
+        {/* Campaign */}
+        <div className="px-4 pb-4">
+          <h3 className="px-2 mb-2 text-[11px] font-semibold text-muted-foreground/70 uppercase tracking-widest">
             Campaign
           </h3>
-          <Select
-            value={filters.campaign}
-            onValueChange={(value) => updateFilter("campaign", value)}
-          >
-            <SelectTrigger className="w-full h-10 bg-background/50 border-border/50 hover:bg-background/80 transition-colors">
+          <Select value={filters.campaign} onValueChange={(value) => updateFilter("campaign", value)}>
+            <SelectTrigger className="w-full h-9 bg-background/50 border-border">
               <SelectValue placeholder="All campaigns" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All campaigns</SelectItem>
               {campaigns.map((campaign) => (
-                <SelectItem key={campaign} value={campaign}>
-                  {campaign}
-                </SelectItem>
+                <SelectItem key={campaign} value={campaign}>{campaign}</SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
 
-        {/* Divider */}
-        <div className="mx-4 mb-6 border-t border-border/30" />
+        <div className="mx-4 mb-4 border-t border-border/30" />
 
-        {/* Sender Account Select */}
-        <div className="px-4 pb-8">
-          <h3 className="px-2 mb-3 text-[11px] font-semibold text-muted-foreground/70 uppercase tracking-widest">
+        {/* Sender Account */}
+        <div className="px-4 pb-6">
+          <h3 className="px-2 mb-2 text-[11px] font-semibold text-muted-foreground/70 uppercase tracking-widest">
             Sender Account
           </h3>
-          <Select
-            value={filters.senderAccount}
-            onValueChange={(value) => updateFilter("senderAccount", value)}
-          >
-            <SelectTrigger className="w-full h-10 bg-background/50 border-border/50 hover:bg-background/80 transition-colors">
+          <Select value={filters.senderAccount} onValueChange={(value) => updateFilter("senderAccount", value)}>
+            <SelectTrigger className="w-full h-9 bg-background/50 border-border">
               <SelectValue placeholder="All accounts" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All accounts</SelectItem>
               {senderAccounts.map((account) => (
-                <SelectItem key={account} value={account}>
-                  {account}
-                </SelectItem>
+                <SelectItem key={account} value={account}>{account}</SelectItem>
               ))}
             </SelectContent>
           </Select>

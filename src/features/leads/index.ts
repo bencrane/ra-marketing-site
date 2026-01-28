@@ -5,6 +5,7 @@ export { LeadNameCell, CompanyCell, TitleCell } from "./components/cells"
 export { AddToListModal } from "./components/AddToListModal"
 export { ViewListsModal } from "./components/ViewListsModal"
 export { SecretCompanyModal } from "./components/SecretCompanyModal"
+export { TargetCompanyPanel } from "./components/TargetCompanyPanel"
 export type { LeadList } from "./components/ViewListsModal"
 
 // Hooks

@@ -41,15 +41,8 @@ export function MessageList({
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
-      {/* Panel header with breathing room */}
-      <div className="px-5 pt-6 pb-4 shrink-0">
-        <h2 className="text-sm font-semibold text-foreground">
-          {threads.length} {threads.length === 1 ? "Conversation" : "Conversations"}
-        </h2>
-      </div>
-
-      {/* Scrollable thread list - flows from top */}
-      <div className="flex-1 overflow-y-auto px-3">
+      {/* Scrollable thread list */}
+      <div className="flex-1 overflow-y-auto px-3 pt-3">
         <div className="space-y-2 pb-4">
           {threads.map((thread) => (
             <button

@@ -6,9 +6,10 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { Building2, User, X, SlidersHorizontal, ListPlus, Eye, EyeOff, Sparkles, Inbox, List, LogOut } from "lucide-react"
 import * as React from "react"
 import { Lead } from "@/features/leads"
-import { DataTable, columns, companyColumns, useLeads, AddToListModal, ViewListsModal, SecretCompanyModal } from "@/features/leads"
+import { DataTable, columns, companyColumns, useLeads, AddToListModal, ViewListsModal, SecretCompanyModal, TargetCompanyPanel } from "@/features/leads"
 import { useFilterState } from "@/features/filters"
 import { AiSearchModal, AiFilters } from "@/features/ai-search"
+import { useToolbarSettings } from "@/features/settings"
 import { Sidebar } from "@/components/sidebar"
 import { SidebarProvider, useSidebar } from "@/components/sidebar-context"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -35,6 +36,7 @@ function LeadsPageInner() {
   } = useFilterState()
   const { state, isLocked } = useSidebar()
   const isCollapsed = state === "collapsed" && !isLocked
+  const { settings: toolbarSettings } = useToolbarSettings()
 
   // Track view mode (companies vs people)
   const [viewMode, setViewMode] = React.useState<"companies" | "people">("people")
@@ -58,13 +60,15 @@ function LeadsPageInner() {
   const [secretCompanyOpen, setSecretCompanyOpen] = React.useState(false)
   const [targetCompany, setTargetCompany] = React.useState<{ companyName?: string; companyDomain?: string } | null>(null)
 
-  // Read company from URL on mount
+  // Read company from URL on mount and when URL changes
   React.useEffect(() => {
     const companyParam = searchParams.get("company")
-    if (companyParam && !targetCompany) {
-      setTargetCompany({ companyName: companyParam })
+    if (companyParam) {
+      setTargetCompany({ companyDomain: companyParam })
+    } else {
+      setTargetCompany(null)
     }
-  }, [searchParams, targetCompany])
+  }, [searchParams])
 
   // Cmd+K keyboard shortcut
   React.useEffect(() => {
@@ -82,13 +86,25 @@ function LeadsPageInner() {
   // Determine which filters to use:
   // - If AI filter is active, use AI filters (manual filters are ignored)
   // - Otherwise, use manual filters (or empty if disabled)
+  // - If "Worked at Customer" signal is active and target company is set, use that domain
   const aiFiltersForApi = getAiFiltersForApi()
   const activeFilters = React.useMemo(() => {
     if (isAiFilterActive && aiFiltersForApi) {
       return aiFiltersForApi
     }
-    return filtersEnabled ? filters : { limit: filters.limit, offset: filters.offset }
-  }, [isAiFilterActive, aiFiltersForApi, filtersEnabled, filters])
+    const baseFilters = filtersEnabled ? filters : { limit: filters.limit, offset: filters.offset }
+
+    // When "Worked at Customer" signal is active, use the target company domain
+    if (filters.signal_worked_at_customer && targetCompany?.companyDomain) {
+      return {
+        ...baseFilters,
+        signal_worked_at_customer: true,
+        company_domain: targetCompany.companyDomain,
+      }
+    }
+
+    return baseFilters
+  }, [isAiFilterActive, aiFiltersForApi, filtersEnabled, filters, targetCompany])
 
   const { leads, meta, isLoading } = useLeads(activeFilters)
 
@@ -107,141 +123,171 @@ function LeadsPageInner() {
         <div className="h-14 flex items-center px-6">
         </div>
 
+        {/* Target Company Panel */}
+        {targetCompany?.companyDomain && (
+          <div className="px-6 pb-4">
+            <TargetCompanyPanel
+              companyDomain={targetCompany.companyDomain}
+              onClear={() => {
+                setTargetCompany(null)
+                router.push("/leads")
+              }}
+            />
+          </div>
+        )}
+
         {/* Toolbar */}
         <div className="h-11 flex items-center justify-between px-6 border-b border-border">
           {/* View Toggle */}
-          <div className="flex rounded-md bg-secondary/30 p-0.5">
-            <button
-              onClick={() => setViewMode("companies")}
-              className={`flex items-center justify-center gap-2 px-3 py-1.5 text-sm font-medium rounded transition-colors ${
-                viewMode === "companies"
-                  ? "bg-secondary text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              <Building2 className="h-4 w-4" />
-              Companies
-            </button>
-            <button
-              onClick={() => setViewMode("people")}
-              className={`flex items-center justify-center gap-2 px-3 py-1.5 text-sm font-medium rounded transition-colors ${
-                viewMode === "people"
-                  ? "bg-secondary text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              <User className="h-4 w-4" />
-              People
-            </button>
-          </div>
+          {toolbarSettings.showViewToggle && (
+            <div className="flex rounded-md bg-secondary/30 p-0.5">
+              <button
+                onClick={() => setViewMode("companies")}
+                className={`flex items-center justify-center gap-2 px-3 py-1.5 text-sm font-medium rounded transition-colors ${
+                  viewMode === "companies"
+                    ? "bg-secondary text-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <Building2 className="h-4 w-4" />
+                Companies
+              </button>
+              <button
+                onClick={() => setViewMode("people")}
+                className={`flex items-center justify-center gap-2 px-3 py-1.5 text-sm font-medium rounded transition-colors ${
+                  viewMode === "people"
+                    ? "bg-secondary text-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <User className="h-4 w-4" />
+                People
+              </button>
+            </div>
+          )}
+
+          {/* Spacer when view toggle is hidden */}
+          {!toolbarSettings.showViewToggle && <div />}
 
           {/* Controls */}
           <div className="flex items-center gap-2">
             {/* Inbox */}
-            <Link
-              href="/inbox"
-              className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md border border-border text-foreground hover:bg-secondary/50 transition-colors"
-              title="Inbox"
-            >
-              <Inbox className="h-4 w-4" />
-              Inbox
-            </Link>
+            {toolbarSettings.showInbox && (
+              <Link
+                href="/inbox"
+                className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md border border-border text-foreground hover:bg-secondary/50 transition-colors"
+                title="Inbox"
+              >
+                <Inbox className="h-4 w-4" />
+                Inbox
+              </Link>
+            )}
 
             {/* Sign Out */}
-            <button
-              onClick={() => {
-                localStorage.removeItem("session_token");
-                localStorage.removeItem("access_token");
-                window.location.href = "/sign-in";
-              }}
-              className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md border border-border text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors"
-              title="Sign out"
-            >
-              <LogOut className="h-4 w-4" />
-            </button>
-
-            {/* AI Search Button */}
-            <button
-              onClick={() => setAiSearchOpen(true)}
-              className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md border border-border text-foreground hover:bg-secondary/50 transition-colors"
-              title="AI Search (⌘K)"
-            >
-              <Sparkles className="h-4 w-4 text-primary" />
-              AI Search
-            </button>
-
-            {/* View Lists / Add to List - Context-aware button */}
-            {selectedRows.length === 0 ? (
+            {toolbarSettings.showSignOut && (
               <button
-                onClick={() => setViewListsOpen(true)}
-                className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md border border-border text-foreground hover:bg-secondary/50 transition-colors"
-                title="View and manage your lists"
+                onClick={() => {
+                  localStorage.removeItem("session_token");
+                  localStorage.removeItem("access_token");
+                  window.location.href = "/sign-in";
+                }}
+                className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md border border-border text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors"
+                title="Sign out"
               >
-                <List className="h-4 w-4" />
-                View Lists
-              </button>
-            ) : (
-              <button
-                onClick={() => setAddToListOpen(true)}
-                className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md border border-border text-foreground hover:bg-secondary/50 transition-colors"
-                title={`Add ${selectedRows.length} leads to a list`}
-              >
-                <ListPlus className="h-4 w-4" />
-                Add to List ({selectedRows.length})
+                <LogOut className="h-4 w-4" />
               </button>
             )}
 
+            {/* AI Search Button */}
+            {toolbarSettings.showAiSearch && (
+              <button
+                onClick={() => setAiSearchOpen(true)}
+                className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md border border-border text-foreground hover:bg-secondary/50 transition-colors"
+                title="AI Search (⌘K)"
+              >
+                <Sparkles className="h-4 w-4 text-primary" />
+                AI Search
+              </button>
+            )}
+
+            {/* View Lists / Add to List - Context-aware button */}
+            {toolbarSettings.showViewLists && (
+              selectedRows.length === 0 ? (
+                <button
+                  onClick={() => setViewListsOpen(true)}
+                  className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md border border-border text-foreground hover:bg-secondary/50 transition-colors"
+                  title="View and manage your lists"
+                >
+                  <List className="h-4 w-4" />
+                  View Lists
+                </button>
+              ) : (
+                <button
+                  onClick={() => setAddToListOpen(true)}
+                  className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md border border-border text-foreground hover:bg-secondary/50 transition-colors"
+                  title={`Add ${selectedRows.length} leads to a list`}
+                >
+                  <ListPlus className="h-4 w-4" />
+                  Add to List ({selectedRows.length})
+                </button>
+              )
+            )}
+
             {/* Columns */}
-            <button
-              className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md border border-border text-foreground hover:bg-secondary/50 transition-colors"
-              title="Columns"
-            >
-              Columns
-              <SlidersHorizontal className="h-4 w-4" />
-            </button>
+            {toolbarSettings.showColumns && (
+              <button
+                className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md border border-border text-foreground hover:bg-secondary/50 transition-colors"
+                title="Columns"
+              >
+                Columns
+                <SlidersHorizontal className="h-4 w-4" />
+              </button>
+            )}
 
             {/* Filters control */}
-            <div className="flex items-center rounded-md border border-border">
-              {/* Filters label */}
-              <span className={cn(
-                "px-3 py-1.5 text-sm font-medium",
-                hasActiveFilters || isAiFilterActive || isListFilterActive ? "text-foreground" : "text-muted-foreground"
-              )}>
-                Filters
-              </span>
+            {toolbarSettings.showFilters && (
+              <div className="flex items-center rounded-md border border-border">
+                {/* Filters label */}
+                <span className={cn(
+                  "px-3 py-1.5 text-sm font-medium",
+                  hasActiveFilters || isAiFilterActive || isListFilterActive ? "text-foreground" : "text-muted-foreground"
+                )}>
+                  Filters
+                </span>
 
-              {/* Eye icon - opens secret company modal */}
-              <button
-                onClick={() => setSecretCompanyOpen(true)}
-                className="flex items-center justify-center p-1.5 transition-colors border-l border-border text-muted-foreground hover:text-foreground hover:bg-secondary/50"
-                title="Target Company"
-              >
-                <Eye className="h-4 w-4" />
-              </button>
+                {/* Eye icon - opens secret company modal */}
+                <button
+                  onClick={() => setSecretCompanyOpen(true)}
+                  className="flex items-center justify-center p-1.5 transition-colors border-l border-border text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                  title="Target Company"
+                >
+                  <Eye className="h-4 w-4" />
+                </button>
 
-              {/* X to clear filters */}
-              <button
-                onClick={() => {
-                  if (isAiFilterActive) {
-                    clearAiFilter()
-                  } else if (isListFilterActive) {
-                    clearListFilter()
-                  } else {
-                    clearAll()
-                  }
-                }}
-                disabled={!hasActiveFilters && !isAiFilterActive && !isListFilterActive}
-                className={cn(
-                  "flex items-center justify-center p-1.5 transition-colors border-l border-border",
-                  (hasActiveFilters || isAiFilterActive || isListFilterActive)
-                    ? "text-foreground hover:bg-secondary/50"
-                    : "text-muted-foreground opacity-50 cursor-not-allowed"
-                )}
-                title="Clear all filters"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
+                {/* X to clear filters */}
+                <button
+                  onClick={() => {
+                    if (isAiFilterActive) {
+                      clearAiFilter()
+                    } else if (isListFilterActive) {
+                      clearListFilter()
+                    } else {
+                      clearAll()
+                    }
+                  }}
+                  disabled={!hasActiveFilters && !isAiFilterActive && !isListFilterActive}
+                  className={cn(
+                    "flex items-center justify-center p-1.5 transition-colors border-l border-border",
+                    (hasActiveFilters || isAiFilterActive || isListFilterActive)
+                      ? "text-foreground hover:bg-secondary/50"
+                      : "text-muted-foreground opacity-50 cursor-not-allowed"
+                  )}
+                  title="Clear all filters"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
