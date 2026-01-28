@@ -60,8 +60,7 @@ export function Sidebar() {
   const [recentlyPromoted, setRecentlyPromoted] = useQueryState('recently_promoted', parseAsBoolean)
   const [atVcPortfolio, setAtVcPortfolio] = useQueryState('at_vc_portfolio', parseAsBoolean)
   const [workedAtCustomer, setWorkedAtCustomer] = useQueryState('worked_at_customer', parseAsBoolean)
-  const [pastEmployer, setPastEmployer] = useQueryState('past_employer', parseAsBoolean)
-
+  
   // Company Filters (URL Synced)
   const [industry, setIndustry] = useQueryState('industry')
   const [companySize, setCompanySize] = useQueryState('employee_range')
@@ -381,12 +380,6 @@ export function Sidebar() {
                 label="Worked at Customer"
                 checked={workedAtCustomer || false}
                 onCheckedChange={(v) => setWorkedAtCustomer(v ? true : null)}
-              />
-              <SignalCheckbox
-                id="past-employer"
-                label="Past Employer"
-                checked={pastEmployer || false}
-                onCheckedChange={(v) => setPastEmployer(v ? true : null)}
               />
             </CollapsibleContent>
           </Collapsible>
