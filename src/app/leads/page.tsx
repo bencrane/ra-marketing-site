@@ -88,10 +88,9 @@ function LeadsPageInner() {
         <div className="h-14 flex items-center px-6">
         </div>
 
-        {/* View Toggle Bar - matches sidebar toggle height */}
-        <div className="h-11 flex items-center justify-between px-6 border-b border-border">
-          
-          {/* Right side controls */}
+        {/* Toolbar */}
+        <div className="h-11 flex items-center justify-end px-6 border-b border-border">
+          {/* Controls */}
           <div className="flex items-center gap-2">
             {/* Inbox */}
             <Link
