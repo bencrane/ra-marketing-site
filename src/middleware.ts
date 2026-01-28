@@ -8,8 +8,13 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const hostname = request.headers.get("host") || "";
 
-  // Allow demo subdomain through without auth
-  if (hostname.startsWith("demo.") || hostname.includes("demo.revenueactivation")) {
+  // Allow demo subdomain and localhost through without auth
+  if (
+    hostname.startsWith("demo.") ||
+    hostname.includes("demo.revenueactivation") ||
+    hostname.startsWith("localhost") ||
+    hostname.startsWith("127.0.0.1")
+  ) {
     return NextResponse.next();
   }
 
