@@ -5,7 +5,7 @@ import Link from "next/link"
 import { Building2, User, X, SlidersHorizontal, ListPlus, Eye, EyeOff, Sparkles, Inbox, List, LogOut } from "lucide-react"
 import * as React from "react"
 import { Lead } from "@/features/leads"
-import { DataTable, columns, companyColumns, useLeads, AddToListModal, ViewListsModal } from "@/features/leads"
+import { DataTable, columns, companyColumns, useLeads, AddToListModal, ViewListsModal, SecretCompanyModal } from "@/features/leads"
 import { useFilterState } from "@/features/filters"
 import { AiSearchModal, AiFilters } from "@/features/ai-search"
 import { Sidebar } from "@/components/sidebar"
@@ -49,6 +49,10 @@ function LeadsPageInner() {
 
   // AI Search modal state
   const [aiSearchOpen, setAiSearchOpen] = React.useState(false)
+
+  // Secret company modal state
+  const [secretCompanyOpen, setSecretCompanyOpen] = React.useState(false)
+  const [targetCompany, setTargetCompany] = React.useState<{ companyName?: string; companyDomain?: string } | null>(null)
 
   // Cmd+K keyboard shortcut
   React.useEffect(() => {
@@ -194,28 +198,13 @@ function LeadsPageInner() {
                 Filters
               </span>
 
-              {/* Eye toggle - enable/disable filters */}
+              {/* Eye icon - opens secret company modal */}
               <button
-                onClick={() => {
-                  if (hasActiveFilters || isAiFilterActive || isListFilterActive) {
-                    setFiltersEnabled(!filtersEnabled)
-                  }
-                }}
-                disabled={!hasActiveFilters && !isAiFilterActive && !isListFilterActive}
-                className={cn(
-                  "flex items-center justify-center p-1.5 transition-colors border-l border-border",
-                  (hasActiveFilters || isAiFilterActive || isListFilterActive) && filtersEnabled
-                    ? "text-foreground hover:bg-secondary/50"
-                    : "text-muted-foreground hover:bg-secondary/50",
-                  !hasActiveFilters && !isAiFilterActive && !isListFilterActive && "opacity-50 cursor-not-allowed"
-                )}
-                title={filtersEnabled ? "Disable filters" : "Enable filters"}
+                onClick={() => setSecretCompanyOpen(true)}
+                className="flex items-center justify-center p-1.5 transition-colors border-l border-border text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                title="Target Company"
               >
-                {filtersEnabled ? (
-                  <Eye className="h-4 w-4" />
-                ) : (
-                  <EyeOff className="h-4 w-4" />
-                )}
+                <Eye className="h-4 w-4" />
               </button>
 
               {/* X to clear filters */}
@@ -349,6 +338,16 @@ function LeadsPageInner() {
         onCreateList={(name, description) => {
           console.log(`Creating new list "${name}"`)
           // TODO: API call to create list
+        }}
+      />
+
+      {/* Secret Company Modal */}
+      <SecretCompanyModal
+        open={secretCompanyOpen}
+        onOpenChange={setSecretCompanyOpen}
+        onSave={(data) => {
+          setTargetCompany(data)
+          console.log("Target company saved:", data)
         }}
       />
     </div>
