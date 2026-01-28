@@ -172,12 +172,11 @@ export function DataTable<TData, TValue>({
                       <div
                         onMouseDown={header.getResizeHandler()}
                         onTouchStart={header.getResizeHandler()}
-                        className={`absolute right-0 top-0 h-full w-4 cursor-col-resize select-none touch-none ${
+                        className={`absolute right-0 top-0 h-full w-2 cursor-col-resize select-none touch-none ${
                           header.column.getIsResizing() ? 'bg-primary' : ''
                         }`}
-                        style={{ transform: 'translateX(50%)' }}
                       >
-                        <div className={`absolute left-1/2 top-0 h-full w-1 -translate-x-1/2 opacity-0 group-hover:opacity-100 hover:opacity-100 transition-opacity ${
+                        <div className={`absolute right-0 top-0 h-full w-px opacity-0 group-hover:opacity-100 transition-opacity ${
                           header.column.getIsResizing() ? 'opacity-100 bg-primary' : 'bg-border'
                         }`} />
                       </div>
