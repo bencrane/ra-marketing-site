@@ -31,8 +31,7 @@ export default function SignInPage() {
 
     try {
       if (mode === "sign-in") {
-        // TODO: Call sign-in API
-        const response = await fetch("/api/auth/sign-in", {
+        const response = await fetch("https://api.revenueinfra.com/api/auth/send-magic-link", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email }),
@@ -152,10 +151,10 @@ export default function SignInPage() {
               </div>
 
               {/* Form */}
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4" noValidate data-form-type="other">
                 <div className="space-y-2">
                   <label
-                    htmlFor="email"
+                    htmlFor="user-identifier"
                     className="text-sm font-medium text-foreground"
                   >
                     Work email
@@ -163,14 +162,15 @@ export default function SignInPage() {
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
                     <input
-                      id="email"
+                      id="user-identifier"
+                      name="user-identifier"
                       type="text"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="you@company.com"
                       className="w-full h-11 pl-10 pr-4 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 text-sm transition-all"
                       required
-                      autoComplete="email"
+                      autoComplete="username"
                       autoFocus
                     />
                   </div>
