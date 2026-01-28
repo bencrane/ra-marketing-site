@@ -170,18 +170,9 @@ export function Sidebar() {
           </div>
         </div>
 
-      {/* View Mode Toggle - matches table header height (h-11), aligns with table header */}
+      {/* View Label - matches table header height (h-11) */}
       <div className="h-11 px-4 flex items-center border-b border-border">
-        <div className="flex flex-1 rounded-md bg-secondary/30 p-0.5">
-          <button className="flex-1 flex items-center justify-center gap-2 px-3 py-1.5 text-sm font-medium rounded text-muted-foreground hover:text-foreground transition-colors">
-            <Building2 className="h-4 w-4" />
-            Companies
-          </button>
-          <button className="flex-1 flex items-center justify-center gap-2 px-3 py-1.5 text-sm font-medium rounded bg-secondary text-foreground transition-colors">
-            <User className="h-4 w-4" />
-            People
-          </button>
-        </div>
+        <span className="text-sm font-medium text-foreground">All Leads</span>
       </div>
 
       <ScrollArea className="flex-1 min-h-0">

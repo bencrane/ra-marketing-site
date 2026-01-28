@@ -90,10 +90,7 @@ function LeadsPageInner() {
 
         {/* View Toggle Bar - matches sidebar toggle height */}
         <div className="h-11 flex items-center justify-between px-6 border-b border-border">
-          <div className="text-sm font-medium text-foreground">
-            All Leads
-          </div>
-
+          
           {/* Right side controls */}
           <div className="flex items-center gap-2">
             {/* Inbox */}
