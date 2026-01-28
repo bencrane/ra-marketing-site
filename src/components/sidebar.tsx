@@ -672,7 +672,7 @@ function FilterFieldWithSuggestions({
     fetcher
   )
 
-  const availableOptions = data?.data.map(o => o.value) || []
+  const availableOptions = data?.data?.map(o => o.value) || []
 
   // Filter suggestions based on input
   const suggestions = inputValue.trim()
