@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Loader2, CheckCircle2, XCircle } from "lucide-react";
 
 type VerifyState = "loading" | "success" | "error";
 
-export default function VerifyPage() {
+function VerifyContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [state, setState] = useState<VerifyState>("loading");
@@ -116,5 +116,32 @@ export default function VerifyPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+function VerifyLoading() {
+  return (
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center px-4">
+      <div className="w-full max-w-[400px]">
+        <div className="bg-card border border-border rounded-xl p-8 shadow-xl shadow-black/5">
+          <div className="text-center py-4">
+            <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+              <Loader2 className="h-6 w-6 text-primary animate-spin" />
+            </div>
+            <h2 className="text-lg font-semibold text-foreground mb-2">
+              Loading...
+            </h2>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function VerifyPage() {
+  return (
+    <Suspense fallback={<VerifyLoading />}>
+      <VerifyContent />
+    </Suspense>
   );
 }
