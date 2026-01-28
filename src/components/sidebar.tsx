@@ -144,7 +144,7 @@ export function Sidebar() {
         onMouseLeave={() => setHovered(false)}
       >
         {/* Header */}
-        <div className="h-14 px-4 flex items-center justify-between border-b border-border">
+        <div className="h-14 px-4 flex items-center justify-between">
           <h1 className="text-base font-semibold tracking-tight text-foreground">Revenue Activation</h1>
           <div className="flex items-center gap-1">
             <button
