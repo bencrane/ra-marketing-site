@@ -20,7 +20,8 @@ import {
   Copy,
   Users,
   CreditCard,
-  FileText
+  FileText,
+  LogOut
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import {
@@ -624,6 +625,21 @@ export function Sidebar() {
 
         </div>
       </ScrollArea>
+
+      {/* Sign Out */}
+      <div className="px-4 py-4 border-t border-border mt-auto">
+        <button
+          onClick={() => {
+            localStorage.removeItem("session_token");
+            localStorage.removeItem("access_token");
+            window.location.href = "/sign-in";
+          }}
+          className="w-full flex items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary/40 rounded-lg transition-colors"
+        >
+          <LogOut className="h-4 w-4" />
+          Sign out
+        </button>
+      </div>
     </aside>
     </>
   )
