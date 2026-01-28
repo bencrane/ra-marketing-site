@@ -21,11 +21,12 @@ import {
 import { Skeleton } from "@/components/ui/skeleton"
 import { Checkbox } from "@/components/ui/checkbox"
 import { components } from "@/api/types"
-import { LeadNameCell, CompanyCell, TitleCell, IndustryCell, EmailCell, PhoneCell } from "./cells"
+import { LeadNameCell, CompanyCell, TitleCell, IndustryCell, EmailCell, PhoneCell, EmployeeSizeCell, LocationCell } from "./cells"
 
 // Use generated types from OpenAPI spec
 export type Lead = components["schemas"]["Lead"]
 
+// People view columns (default)
 export const columns: ColumnDef<Lead>[] = [
   {
     id: "select",
@@ -101,6 +102,69 @@ export const columns: ColumnDef<Lead>[] = [
     minSize: 120,
     maxSize: 200,
     cell: ({ row }) => <PhoneCell lead={row.original} />,
+  },
+]
+
+// Company view columns
+export const companyColumns: ColumnDef<Lead>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+        className="border-border"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+        className="border-border"
+        onClick={(e) => e.stopPropagation()}
+      />
+    ),
+    size: 40,
+    minSize: 40,
+    maxSize: 40,
+    enableResizing: false,
+  },
+  {
+    accessorKey: "company_name",
+    header: "Company",
+    size: 280,
+    minSize: 150,
+    maxSize: 500,
+    cell: ({ row }) => <CompanyCell lead={row.original} />,
+  },
+  {
+    accessorKey: "matched_industry",
+    header: "Industry",
+    size: 240,
+    minSize: 120,
+    maxSize: 400,
+    cell: ({ row }) => <IndustryCell lead={row.original} />,
+  },
+  {
+    accessorKey: "employee_range",
+    header: "Employee Range",
+    size: 180,
+    minSize: 120,
+    maxSize: 250,
+    cell: ({ row }) => <EmployeeSizeCell lead={row.original} />,
+  },
+  {
+    id: "location",
+    header: "Location",
+    size: 220,
+    minSize: 150,
+    maxSize: 350,
+    cell: ({ row }) => <LocationCell lead={row.original} />,
   },
 ]
 

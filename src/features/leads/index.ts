@@ -1,5 +1,5 @@
 // Components
-export { DataTable, columns } from "./components/LeadsTable"
+export { DataTable, columns, companyColumns } from "./components/LeadsTable"
 export type { Lead } from "./components/LeadsTable"
 export { LeadNameCell, CompanyCell, TitleCell } from "./components/cells"
 export { AddToListModal } from "./components/AddToListModal"

@@ -5,7 +5,7 @@ import Link from "next/link"
 import { Building2, User, X, SlidersHorizontal, ListPlus, Eye, EyeOff, Sparkles, Inbox, List, LogOut } from "lucide-react"
 import * as React from "react"
 import { Lead } from "@/features/leads"
-import { DataTable, columns, useLeads, AddToListModal, ViewListsModal } from "@/features/leads"
+import { DataTable, columns, companyColumns, useLeads, AddToListModal, ViewListsModal } from "@/features/leads"
 import { useFilterState } from "@/features/filters"
 import { AiSearchModal, AiFilters } from "@/features/ai-search"
 import { Sidebar } from "@/components/sidebar"
@@ -31,6 +31,9 @@ function LeadsPageInner() {
   } = useFilterState()
   const { state, isLocked } = useSidebar()
   const isCollapsed = state === "collapsed" && !isLocked
+
+  // Track view mode (companies vs people)
+  const [viewMode, setViewMode] = React.useState<"companies" | "people">("people")
 
   // Track selected rows
   const [selectedRows, setSelectedRows] = React.useState<Lead[]>([])
@@ -92,11 +95,25 @@ function LeadsPageInner() {
         <div className="h-11 flex items-center justify-between px-6 border-b border-border">
           {/* View Toggle */}
           <div className="flex rounded-md bg-secondary/30 p-0.5">
-            <button className="flex items-center justify-center gap-2 px-3 py-1.5 text-sm font-medium rounded text-muted-foreground hover:text-foreground transition-colors">
+            <button
+              onClick={() => setViewMode("companies")}
+              className={`flex items-center justify-center gap-2 px-3 py-1.5 text-sm font-medium rounded transition-colors ${
+                viewMode === "companies"
+                  ? "bg-secondary text-foreground"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
               <Building2 className="h-4 w-4" />
               Companies
             </button>
-            <button className="flex items-center justify-center gap-2 px-3 py-1.5 text-sm font-medium rounded bg-secondary text-foreground transition-colors">
+            <button
+              onClick={() => setViewMode("people")}
+              className={`flex items-center justify-center gap-2 px-3 py-1.5 text-sm font-medium rounded transition-colors ${
+                viewMode === "people"
+                  ? "bg-secondary text-foreground"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
               <User className="h-4 w-4" />
               People
             </button>
@@ -277,7 +294,7 @@ function LeadsPageInner() {
 
         {/* Table Content */}
         <div className="flex-1 overflow-auto px-6 pb-6 pt-6">
-          <DataTable columns={columns} data={leads} isLoading={isLoading} onSelectionChange={setSelectedRows} />
+          <DataTable columns={viewMode === "companies" ? companyColumns : columns} data={leads} isLoading={isLoading} onSelectionChange={setSelectedRows} />
 
           {/* Pagination Footer */}
           <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground font-medium uppercase tracking-wider">
