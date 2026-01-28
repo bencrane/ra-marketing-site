@@ -8,7 +8,7 @@ interface EmployeeSizeCellProps {
 
 export function EmployeeSizeCell({ lead }: EmployeeSizeCellProps) {
   return (
-    <div className="text-sm text-muted-foreground">
+    <div className="text-sm text-foreground">
       {lead.employee_range || "—"}
     </div>
   )

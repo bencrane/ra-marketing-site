@@ -11,7 +11,7 @@ export function LocationCell({ lead }: LocationCellProps) {
   const location = parts.join(", ")
 
   return (
-    <div className="text-sm text-muted-foreground">
+    <div className="text-sm text-foreground">
       {location || "—"}
     </div>
   )

@@ -17,7 +17,7 @@ interface CompanyCellProps {
  */
 export function CompanyCell({ lead }: CompanyCellProps) {
   return (
-    <div className="text-muted-foreground">
+    <div className="text-sm text-foreground">
       {lead.company_name || "—"}
     </div>
   )
