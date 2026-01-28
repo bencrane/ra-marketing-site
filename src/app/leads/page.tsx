@@ -90,15 +90,8 @@ function LeadsPageInner() {
 
         {/* View Toggle Bar - matches sidebar toggle height */}
         <div className="h-11 flex items-center justify-between px-6 border-b border-border">
-          <div className="flex rounded-md bg-secondary/30 p-0.5">
-            <button className="flex items-center justify-center gap-2 px-3 py-1.5 text-sm font-medium rounded text-muted-foreground hover:text-foreground transition-colors">
-              <Building2 className="h-4 w-4" />
-              Companies
-            </button>
-            <button className="flex items-center justify-center gap-2 px-3 py-1.5 text-sm font-medium rounded bg-secondary text-foreground transition-colors">
-              <User className="h-4 w-4" />
-              People
-            </button>
+          <div className="text-sm font-medium text-foreground">
+            All Leads
           </div>
 
           {/* Right side controls */}
