@@ -21,7 +21,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton"
 import { Checkbox } from "@/components/ui/checkbox"
 import { components } from "@/api/types"
-import { LeadNameCell, CompanyCell, TitleCell, EmailCell, PhoneCell } from "./cells"
+import { LeadNameCell, CompanyCell, TitleCell, IndustryCell, EmailCell, PhoneCell } from "./cells"
 
 // Use generated types from OpenAPI spec
 export type Lead = components["schemas"]["Lead"]
@@ -77,6 +77,14 @@ export const columns: ColumnDef<Lead>[] = [
     minSize: 120,
     maxSize: 500,
     cell: ({ row }) => <TitleCell lead={row.original} />,
+  },
+  {
+    accessorKey: "matched_industry",
+    header: "Industry",
+    size: 200,
+    minSize: 120,
+    maxSize: 300,
+    cell: ({ row }) => <IndustryCell lead={row.original} />,
   },
   {
     id: "email",
