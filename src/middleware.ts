@@ -11,9 +11,9 @@ export function middleware(request: NextRequest) {
     if (pathname.startsWith("/hq")) {
       return NextResponse.next();
     }
-    // Rewrite all other paths to /hq
+    // Rewrite paths to /hq prefix (e.g., /demo -> /hq/demo, / -> /hq)
     const url = request.nextUrl.clone();
-    url.pathname = "/hq";
+    url.pathname = pathname === "/" ? "/hq" : `/hq${pathname}`;
     return NextResponse.rewrite(url);
   }
 
