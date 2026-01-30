@@ -14,6 +14,7 @@ import { Sidebar } from "@/components/sidebar"
 import { SidebarProvider, useSidebar } from "@/components/sidebar-context"
 import { Skeleton } from "@/components/ui/skeleton"
 import { cn } from "@/lib/utils"
+import { clearCookie } from "@/lib/cookies"
 
 function LeadsPageInner() {
   const router = useRouter()
@@ -189,7 +190,7 @@ function LeadsPageInner() {
                 onClick={() => {
                   localStorage.removeItem("session_token");
                   localStorage.removeItem("access_token");
-                  document.cookie = "session_token=; path=/; max-age=0";
+                  clearCookie("session_token");
                   window.location.href = "/sign-in";
                 }}
                 className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md border border-border text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors"

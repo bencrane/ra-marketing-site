@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Loader2, CheckCircle2, XCircle } from "lucide-react";
+import { setCookie } from "@/lib/cookies";
 
 type VerifyState = "loading" | "success" | "error";
 
@@ -39,7 +40,8 @@ function VerifyContent() {
         if (sessionToken) {
           localStorage.setItem("session_token", sessionToken);
           // Set cookie for middleware auth check (30 days)
-          document.cookie = `session_token=${sessionToken}; path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`;
+          // Uses dynamic domain detection for cross-subdomain support
+          setCookie("session_token", sessionToken, { maxAge: 60 * 60 * 24 * 30 });
         }
         if (data.access_token) {
           localStorage.setItem("access_token", data.access_token);

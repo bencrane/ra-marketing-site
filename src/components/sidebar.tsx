@@ -20,6 +20,7 @@ import {
   LogOut
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { clearCookie } from "@/lib/cookies"
 import {
   Collapsible,
   CollapsibleContent,
@@ -120,7 +121,7 @@ export function Sidebar() {
       onClick={() => {
         localStorage.removeItem("session_token");
         localStorage.removeItem("access_token");
-        document.cookie = "session_token=; path=/; max-age=0";
+        clearCookie("session_token");
         window.location.href = "/sign-in";
       }}
       className="w-full flex items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary/40 rounded-lg transition-colors"
