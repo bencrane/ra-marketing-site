@@ -8,10 +8,6 @@ import {
   User,
   MapPin,
   Radio,
-  PanelLeftClose,
-  PanelLeft,
-  Lock,
-  LockOpen,
   DollarSign,
   Tag,
   Cpu,
@@ -29,10 +25,10 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
+import { SidebarShell, SidebarSelector } from "@/components/ui/sidebar-shell"
 import { useQueryState, parseAsBoolean } from 'nuqs'
 import useSWR from "swr"
 import { fetcher, API_BASE_URL } from "@/lib/api"
@@ -119,66 +115,33 @@ export function Sidebar() {
   const [recentlyRaised, setRecentlyRaised] = useQueryState('recently_raised', parseAsBoolean)
   const [rapidGrowth, setRapidGrowth] = useQueryState('rapid_growth', parseAsBoolean)
 
+  const signOutButton = (
+    <button
+      onClick={() => {
+        localStorage.removeItem("session_token");
+        localStorage.removeItem("access_token");
+        document.cookie = "session_token=; path=/; max-age=0";
+        window.location.href = "/sign-in";
+      }}
+      className="w-full flex items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary/40 rounded-lg transition-colors"
+    >
+      <LogOut className="h-4 w-4" />
+      Sign out
+    </button>
+  )
+
   return (
-    <>
-      {/* Collapsed state - just show expand button */}
-      {isCollapsed && !isLocked && (
-        <div className="fixed left-0 top-0 h-screen w-12 flex flex-col items-center pt-4 z-30">
-          <button
-            onClick={toggle}
-            className="p-2 rounded-md hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
-            title="Expand sidebar"
-          >
-            <PanelLeft className="h-5 w-5" />
-          </button>
-        </div>
-      )}
-
-      {/* Full sidebar */}
-      <aside
-        className={cn(
-          "fixed left-0 top-0 h-screen w-[280px] border-r border-border bg-sidebar text-sidebar-foreground flex flex-col z-30 transition-transform duration-200",
-          isCollapsed && !isLocked && "-translate-x-full"
-        )}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-      >
-        {/* Header */}
-        <div className="h-14 px-4 flex items-center justify-between border-b border-border">
-          <h1 className="text-base font-semibold tracking-tight text-foreground">Revenue Activation</h1>
-          <div className="flex items-center gap-1">
-            <button
-              onClick={toggle}
-              className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
-              title="Collapse sidebar"
-            >
-              <PanelLeftClose className="h-4 w-4" />
-            </button>
-            <button
-              onClick={() => setLocked(!isLocked)}
-              className={cn(
-                "p-1.5 rounded-md transition-colors",
-                isLocked
-                  ? "text-foreground hover:bg-secondary"
-                  : "text-muted-foreground hover:text-foreground hover:bg-secondary"
-              )}
-              title={isLocked ? "Unlock sidebar (auto-hide)" : "Lock sidebar open"}
-            >
-              {isLocked ? <Lock className="h-4 w-4" /> : <LockOpen className="h-4 w-4" />}
-            </button>
-          </div>
-        </div>
-
-      {/* List Selector - matches toolbar height (h-11) */}
-      <div className="h-11 px-4 flex items-center border-b border-border">
-        <button className="flex w-full items-center justify-between px-3 py-1.5 text-sm font-medium rounded-md bg-secondary/50 hover:bg-secondary text-foreground transition-colors">
-          <span>All Leads</span>
-          <ChevronDown className="h-4 w-4 text-muted-foreground" />
-        </button>
-      </div>
-
-      <ScrollArea className="flex-1 min-h-0">
-        <div className="px-4 pt-4 pb-6 space-y-6">
+    <SidebarShell
+      isCollapsed={isCollapsed}
+      isLocked={isLocked}
+      onToggle={toggle}
+      onLockChange={setLocked}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      secondaryRow={<SidebarSelector value="All Leads" />}
+      footer={signOutButton}
+    >
+      <div className="px-4 pt-4 pb-6 space-y-6">
 
           {/* COMPANY Section */}
           <Collapsible open={isCompanyOpen} onOpenChange={setIsCompanyOpen}>
@@ -611,25 +574,7 @@ export function Sidebar() {
           </Collapsible>
 
         </div>
-      </ScrollArea>
-
-      {/* Sign Out */}
-      <div className="px-4 py-4 border-t border-border mt-auto">
-        <button
-          onClick={() => {
-            localStorage.removeItem("session_token");
-            localStorage.removeItem("access_token");
-            document.cookie = "session_token=; path=/; max-age=0";
-            window.location.href = "/sign-in";
-          }}
-          className="w-full flex items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary/40 rounded-lg transition-colors"
-        >
-          <LogOut className="h-4 w-4" />
-          Sign out
-        </button>
-      </div>
-    </aside>
-    </>
+    </SidebarShell>
   )
 }
 

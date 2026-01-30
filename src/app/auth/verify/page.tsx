@@ -35,11 +35,11 @@ function VerifyContent() {
         const data = await response.json();
 
         // Store the session token in localStorage and cookie
-        const token = data.session_token || data.token;
-        if (token) {
-          localStorage.setItem("session_token", token);
+        const sessionToken = data.session_token || data.token;
+        if (sessionToken) {
+          localStorage.setItem("session_token", sessionToken);
           // Set cookie for middleware auth check (30 days)
-          document.cookie = `session_token=${token}; path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`;
+          document.cookie = `session_token=${sessionToken}; path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`;
         }
         if (data.access_token) {
           localStorage.setItem("access_token", data.access_token);

@@ -2,6 +2,7 @@
 
 import { MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Spinner } from "@/components/ui/spinner";
 import type { Thread } from "../types";
 
 interface MessageListProps {
@@ -20,7 +21,7 @@ export function MessageList({
   if (isLoading) {
     return (
       <div className="flex-1 flex items-center justify-center">
-        <div className="h-5 w-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+        <Spinner className="text-primary" />
       </div>
     );
   }

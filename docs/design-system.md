@@ -235,6 +235,11 @@ badge-funded
 badge-promoted
 badge-vc
 
+// Status colors (inbox message states)
+text-status-interested      // Amber - positive response
+text-status-not-interested  // Red - negative response
+text-status-out-of-office   // Blue - informational
+
 // Effects
 card-elevated
 card-glow
@@ -255,4 +260,44 @@ animate-fade-in
 
 // Focus
 focus-ring
+```
+
+---
+
+## UI Components
+
+### Spinner
+Loading indicator with size variants.
+
+```tsx
+import { Spinner } from "@/components/ui/spinner"
+
+<Spinner />                           // Default (md)
+<Spinner size="sm" />                 // Small
+<Spinner size="lg" />                 // Large
+<Spinner className="text-primary" />  // Custom color
+```
+
+### SegmentedControl
+Toggle between mutually exclusive options.
+
+```tsx
+import { SegmentedControl } from "@/components/ui/segmented-control"
+
+<SegmentedControl
+  options={[
+    { value: "existing", label: "Existing" },
+    { value: "new", label: "New" },
+  ]}
+  value={mode}
+  onChange={setMode}
+/>
+
+// Compact size for sidebars
+<SegmentedControl
+  options={[...]}
+  value={value}
+  onChange={onChange}
+  size="sm"
+/>
 ```

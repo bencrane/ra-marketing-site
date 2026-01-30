@@ -215,15 +215,15 @@ export function DataTable<TData, TValue>({
   }
 
   return (
-    <div className="border border-border bg-card">
-      <Table style={{ width: table.getCenterTotalSize(), tableLayout: 'fixed' }}>
+    <div className="border border-border bg-card rounded-lg overflow-hidden">
+      <Table className="table-premium" style={{ width: table.getCenterTotalSize(), tableLayout: 'fixed' }}>
         <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className="hover:bg-transparent border-b border-border/50">
                 {headerGroup.headers.map((header) => (
                   <TableHead
                     key={header.id}
-                    className="h-11 px-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground bg-card relative group"
+                    className="h-11 px-4 text-xs font-medium text-muted-foreground bg-table-header relative group"
                     style={{ width: header.getSize() }}
                   >
                     {header.isPlaceholder
@@ -266,10 +266,10 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   onClick={() => handleRowClick(row.original)}
-                  className="border-b border-border/30 hover:bg-secondary/20 transition-colors cursor-pointer"
+                  className="border-b border-border/30 hover:bg-table-row-hover transition-colors cursor-pointer"
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="px-4 py-3.5 text-sm align-middle" style={{ width: cell.column.getSize() }}>
+                    <TableCell key={cell.id} className="px-4 py-4 text-sm align-middle" style={{ width: cell.column.getSize() }}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}

@@ -33,9 +33,9 @@ const STATUS_OPTIONS: {
   icon: typeof Star;
   activeColor: string;
 }[] = [
-  { id: "interested", label: "Interested", icon: Star, activeColor: "text-yellow-500" },
-  { id: "not_interested", label: "Not Interested", icon: ThumbsDown, activeColor: "text-red-400" },
-  { id: "out_of_office", label: "Out of Office", icon: Clock, activeColor: "text-blue-400" },
+  { id: "interested", label: "Interested", icon: Star, activeColor: "text-status-interested" },
+  { id: "not_interested", label: "Not Interested", icon: ThumbsDown, activeColor: "text-status-not-interested" },
+  { id: "out_of_office", label: "Out of Office", icon: Clock, activeColor: "text-status-out-of-office" },
 ];
 
 export function MessageDetail({

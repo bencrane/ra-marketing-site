@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Mail, Loader2, CheckCircle2 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { SegmentedControl } from "@/components/ui/segmented-control";
 
 type AuthMode = "sign-in" | "request-access";
 
@@ -80,7 +80,7 @@ export default function SignInPage() {
 
       {/* Auth Card */}
       <div className="w-full max-w-[400px]">
-        <div className="bg-card border border-border rounded-xl p-8 shadow-xl shadow-black/5">
+        <div className="bg-card border border-border rounded-lg p-8 card-elevated">
           {isSubmitted ? (
             // Success State
             <div className="text-center py-4">
@@ -105,38 +105,18 @@ export default function SignInPage() {
           ) : (
             <>
               {/* Mode Toggle */}
-              <div className="flex rounded-lg bg-secondary/30 p-1 mb-8">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setMode("sign-in");
-                    setError(null);
-                  }}
-                  className={cn(
-                    "flex-1 px-4 py-2 text-sm font-medium rounded-md transition-all",
-                    mode === "sign-in"
-                      ? "bg-background text-foreground shadow-sm"
-                      : "text-muted-foreground hover:text-foreground"
-                  )}
-                >
-                  Sign in
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setMode("request-access");
-                    setError(null);
-                  }}
-                  className={cn(
-                    "flex-1 px-4 py-2 text-sm font-medium rounded-md transition-all",
-                    mode === "request-access"
-                      ? "bg-background text-foreground shadow-sm"
-                      : "text-muted-foreground hover:text-foreground"
-                  )}
-                >
-                  Request access
-                </button>
-              </div>
+              <SegmentedControl
+                options={[
+                  { value: "sign-in", label: "Sign in" },
+                  { value: "request-access", label: "Request access" },
+                ]}
+                value={mode}
+                onChange={(newMode) => {
+                  setMode(newMode);
+                  setError(null);
+                }}
+                className="mb-8"
+              />
 
               {/* Heading */}
               <div className="mb-6">

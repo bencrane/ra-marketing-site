@@ -79,7 +79,7 @@ export function TargetCompanyPanel({ companyDomain, onClear, className }: Target
 
   if (isLoading) {
     return (
-      <div className={cn("border border-border rounded-lg bg-card p-4", className)}>
+      <div className={cn("border border-border rounded-lg bg-card card-elevated p-4", className)}>
         <div className="animate-pulse space-y-3">
           <div className="h-5 w-32 bg-muted rounded" />
           <div className="h-4 w-full bg-muted/50 rounded" />
@@ -95,7 +95,7 @@ export function TargetCompanyPanel({ companyDomain, onClear, className }: Target
   if (!data) return null
 
   return (
-    <div className={cn("border border-border rounded-lg bg-card overflow-hidden", className)}>
+    <div className={cn("border border-border rounded-lg bg-card card-elevated overflow-hidden", className)}>
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-secondary/20">
         <div className="flex items-center gap-3">

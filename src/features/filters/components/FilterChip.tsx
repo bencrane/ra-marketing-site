@@ -23,20 +23,13 @@ interface FilterChipProps {
  */
 export function FilterChip({ label, value, onRemove, className }: FilterChipProps) {
   return (
-    <span
-      className={cn(
-        "inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-md",
-        "bg-secondary text-secondary-foreground",
-        "transition-colors",
-        className
-      )}
-    >
+    <span className={cn("filter-chip", className)}>
       <span className="text-muted-foreground">{label}:</span>
       <span>{value}</span>
       <button
         type="button"
         onClick={onRemove}
-        className="ml-0.5 h-3.5 w-3.5 rounded-sm opacity-70 hover:opacity-100 hover:bg-muted flex items-center justify-center"
+        className="filter-chip-remove ml-0.5 flex items-center justify-center"
         aria-label={`Remove ${label} filter`}
       >
         <X className="h-3 w-3" />

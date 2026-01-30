@@ -56,6 +56,11 @@
   --color-table-header: hsl(var(--table-header));
   --color-table-row-hover: hsl(var(--table-row-hover));
 
+  /* Status colors */
+  --color-status-interested: hsl(var(--status-interested));
+  --color-status-not-interested: hsl(var(--status-not-interested));
+  --color-status-out-of-office: hsl(var(--status-out-of-office));
+
   /* Fonts */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -136,6 +141,13 @@
   /* At VC Portfolio - Blue (corporate, established) */
   --badge-vc: 210 60% 55%;
   --badge-vc-bg: 210 40% 12%;
+
+  /*
+   * Status colors - inbox message states
+   */
+  --status-interested: 45 90% 55%;      /* Amber/yellow - positive */
+  --status-not-interested: 0 70% 55%;   /* Red - negative */
+  --status-out-of-office: 210 60% 55%;  /* Blue - informational */
 
   /* Table colors */
   --table-header: 0 0% 4%;

@@ -9,11 +9,10 @@ import {
   Star,
   ThumbsDown,
   Clock,
-  PanelLeftClose,
-  Lock,
-  ChevronDown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SegmentedControl } from "@/components/ui/segmented-control";
+import { SidebarShell, SidebarSelector } from "@/components/ui/sidebar-shell";
 import {
   Select,
   SelectContent,
@@ -57,49 +56,25 @@ export function InboxSidebar({
   };
 
   return (
-    <div className="fixed left-0 top-0 h-screen w-[280px] border-r border-border bg-sidebar flex flex-col z-30">
-      {/* Header */}
-      <div className="h-14 px-4 flex items-center justify-between border-b border-border shrink-0">
-        <span className="text-base font-semibold tracking-tight text-foreground">Revenue Activation</span>
-        <div className="flex items-center gap-1">
-          <button className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
-            <PanelLeftClose className="h-4 w-4" />
-          </button>
-          <button className="p-1.5 rounded-md text-foreground hover:bg-secondary transition-colors">
-            <Lock className="h-4 w-4" />
-          </button>
-        </div>
-      </div>
-
-      {/* Inbox Selector */}
-      <div className="h-11 px-4 flex items-center border-b border-border shrink-0">
-        <button className="flex w-full items-center justify-between px-3 py-1.5 text-sm font-medium rounded-md bg-secondary/50 hover:bg-secondary text-foreground transition-colors">
-          <span>Inbox</span>
-          <ChevronDown className="h-4 w-4 text-muted-foreground" />
-        </button>
-      </div>
-
-      {/* Scrollable content */}
-      <div className="flex-1 overflow-y-auto">
+    <SidebarShell
+      secondaryRow={<SidebarSelector value="Inbox" />}
+    >
+      <div className="px-4 pt-4 pb-6 space-y-6">
         {/* Search */}
-        <div className="px-4 py-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/60" />
-            <input
-              type="text"
-              placeholder="Search messages..."
-              value={filters.search}
-              onChange={(e) => updateFilter("search", e.target.value)}
-              className="w-full h-9 pl-10 pr-4 rounded-lg border border-border bg-background/50 text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 text-sm"
-            />
-          </div>
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/60" />
+          <input
+            type="text"
+            placeholder="Search messages..."
+            value={filters.search}
+            onChange={(e) => updateFilter("search", e.target.value)}
+            className="w-full h-9 pl-10 pr-4 rounded-lg border border-border bg-background/50 text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 text-sm"
+          />
         </div>
 
         {/* Folders */}
-        <div className="px-4 pb-4">
-          <h3 className="px-2 mb-2 text-[11px] font-semibold text-muted-foreground/70 uppercase tracking-widest">
-            Folders
-          </h3>
+        <div>
+          <h3 className="sidebar-section-header px-2 mb-2">Folders</h3>
           <div className="space-y-1">
             {FOLDERS.map((folder) => (
               <button
@@ -127,13 +102,11 @@ export function InboxSidebar({
           </div>
         </div>
 
-        <div className="mx-4 mb-4 border-t border-border/30" />
+        <div className="border-t border-border/30" />
 
         {/* Status */}
-        <div className="px-4 pb-4">
-          <h3 className="px-2 mb-2 text-[11px] font-semibold text-muted-foreground/70 uppercase tracking-widest">
-            Filter by Status
-          </h3>
+        <div>
+          <h3 className="sidebar-section-header px-2 mb-2">Filter by Status</h3>
           <div className="space-y-1">
             {STATUSES.map((status) => (
               <button
@@ -153,38 +126,28 @@ export function InboxSidebar({
           </div>
         </div>
 
-        <div className="mx-4 mb-4 border-t border-border/30" />
+        <div className="border-t border-border/30" />
 
         {/* Read State */}
-        <div className="px-4 pb-4">
-          <h3 className="px-2 mb-2 text-[11px] font-semibold text-muted-foreground/70 uppercase tracking-widest">
-            Read State
-          </h3>
-          <div className="flex rounded-lg bg-secondary/40 p-1">
-            {(["all", "unread", "read"] as const).map((state) => (
-              <button
-                key={state}
-                onClick={() => updateFilter("readState", state)}
-                className={cn(
-                  "flex-1 px-3 py-1.5 text-xs font-semibold rounded-md transition-colors capitalize",
-                  filters.readState === state
-                    ? "bg-background text-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
-                )}
-              >
-                {state === "all" ? "All" : state}
-              </button>
-            ))}
-          </div>
+        <div>
+          <h3 className="sidebar-section-header px-2 mb-2">Read State</h3>
+          <SegmentedControl
+            options={[
+              { value: "all", label: "All" },
+              { value: "unread", label: "Unread" },
+              { value: "read", label: "Read" },
+            ]}
+            value={filters.readState}
+            onChange={(state) => updateFilter("readState", state)}
+            size="sm"
+          />
         </div>
 
-        <div className="mx-4 mb-4 border-t border-border/30" />
+        <div className="border-t border-border/30" />
 
         {/* Campaign */}
-        <div className="px-4 pb-4">
-          <h3 className="px-2 mb-2 text-[11px] font-semibold text-muted-foreground/70 uppercase tracking-widest">
-            Campaign
-          </h3>
+        <div>
+          <h3 className="sidebar-section-header px-2 mb-2">Campaign</h3>
           <Select value={filters.campaign} onValueChange={(value) => updateFilter("campaign", value)}>
             <SelectTrigger className="w-full h-9 bg-background/50 border-border">
               <SelectValue placeholder="All campaigns" />
@@ -198,13 +161,11 @@ export function InboxSidebar({
           </Select>
         </div>
 
-        <div className="mx-4 mb-4 border-t border-border/30" />
+        <div className="border-t border-border/30" />
 
         {/* Sender Account */}
-        <div className="px-4 pb-6">
-          <h3 className="px-2 mb-2 text-[11px] font-semibold text-muted-foreground/70 uppercase tracking-widest">
-            Sender Account
-          </h3>
+        <div>
+          <h3 className="sidebar-section-header px-2 mb-2">Sender Account</h3>
           <Select value={filters.senderAccount} onValueChange={(value) => updateFilter("senderAccount", value)}>
             <SelectTrigger className="w-full h-9 bg-background/50 border-border">
               <SelectValue placeholder="All accounts" />
@@ -218,6 +179,6 @@ export function InboxSidebar({
           </Select>
         </div>
       </div>
-    </div>
+    </SidebarShell>
   );
 }

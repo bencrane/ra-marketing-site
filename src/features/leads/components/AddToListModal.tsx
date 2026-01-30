@@ -2,6 +2,8 @@
 
 import * as React from "react"
 import { Check } from "lucide-react"
+import { Spinner } from "@/components/ui/spinner"
+import { SegmentedControl } from "@/components/ui/segmented-control"
 import {
   Dialog,
   DialogContent,
@@ -93,30 +95,14 @@ export function AddToListModal({
 
         {/* Mode Toggle */}
         <div className="px-6 pb-5">
-          <div className="flex rounded-lg bg-secondary/30 p-1">
-            <button
-              onClick={() => setMode("select")}
-              className={cn(
-                "flex-1 px-4 py-2 text-sm font-medium rounded-md transition-all",
-                mode === "select"
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              Existing
-            </button>
-            <button
-              onClick={() => setMode("create")}
-              className={cn(
-                "flex-1 px-4 py-2 text-sm font-medium rounded-md transition-all",
-                mode === "create"
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              New
-            </button>
-          </div>
+          <SegmentedControl
+            options={[
+              { value: "select", label: "Existing" },
+              { value: "create", label: "New" },
+            ]}
+            value={mode}
+            onChange={setMode}
+          />
         </div>
 
         {/* Content */}
@@ -181,7 +167,7 @@ export function AddToListModal({
           >
             {isSubmitting ? (
               <span className="flex items-center gap-2">
-                <span className="h-4 w-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                <Spinner size="sm" />
                 Adding...
               </span>
             ) : mode === "select" ? (
