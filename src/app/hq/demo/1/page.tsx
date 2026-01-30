@@ -96,7 +96,7 @@ export default function Demo1Page() {
 
       {!isLoading && customers.length > 0 && (
         <div>
-          <p className="text-xs text-muted-foreground mb-3">
+          <p className="text-xs text-muted-foreground mb-4">
             {customers.length} customers found for{" "}
             <span className="text-foreground font-medium">{savedDomain}</span>
           </p>
@@ -114,7 +114,7 @@ export default function Demo1Page() {
               description="We'll scan for ICP-relevant people who previously worked at these customers."
               buttonLabel="Find People"
               onAction={startProcessing}
-              className="mt-4"
+              className="mt-6"
             />
           )}
 
@@ -122,12 +122,12 @@ export default function Demo1Page() {
             <ProcessingChecklist
               steps={PROCESSING_STEPS}
               completedSteps={completedSteps}
-              className="mt-4"
+              className="mt-6"
             />
           )}
 
           {isDone && (
-            <div className="mt-6">
+            <div className="mt-8">
               <h2 className="text-base font-semibold mb-1">Alumni Matches</h2>
               <p className="text-xs text-muted-foreground mb-3">
                 ICP-relevant people who previously worked at {savedDomain}&apos;s customers
