@@ -110,7 +110,6 @@ export default function Demo1Page() {
 
   // Leads state
   const [leads, setLeads] = useState<Lead[]>([])
-  const [leadsTotal, setLeadsTotal] = useState<number>(0)
   const [isLoadingLeads, setIsLoadingLeads] = useState(false)
   const [showLeads, setShowLeads] = useState(false)
 
@@ -125,8 +124,7 @@ export default function Demo1Page() {
 
     try {
       const params = new URLSearchParams()
-      params.set("limit", "50")
-      params.set("offset", "0")
+      params.set("limit", "2000")
 
       // Map ICP data to filter params
       if (companyICP.icp_industries?.length > 0) {
@@ -145,10 +143,10 @@ export default function Demo1Page() {
         params.set("company_country", companyICP.icp_countries.join(","))
       }
 
-      console.log("Leads Request:", `${API_BASE.replace("/companies", "")}/leads?${params.toString()}`)
+      console.log("Leads Request:", `https://api.revenueinfra.com/api/leads/quick?${params.toString()}`)
 
       const response = await fetch(
-        `https://api.revenueinfra.com/api/leads?${params.toString()}`
+        `https://api.revenueinfra.com/api/leads/quick?${params.toString()}`
       )
 
       if (!response.ok) {
@@ -159,7 +157,6 @@ export default function Demo1Page() {
       console.log("Leads Response:", data)
 
       setLeads(data.data || [])
-      setLeadsTotal(data.meta?.total || data.data?.length || 0)
       setShowLeads(true)
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to fetch leads")
@@ -369,7 +366,7 @@ export default function Demo1Page() {
             <div className="mt-6">
               <h2 className="text-base font-semibold mb-1">ICP-Matched Leads</h2>
               <p className="text-xs text-muted-foreground mb-4">
-                {leadsTotal.toLocaleString()} leads found matching {companyICP?.company_name || savedDomain}&apos;s ICP criteria
+                Showing {leads.length.toLocaleString()} leads matching {companyICP?.company_name || savedDomain}&apos;s ICP criteria
               </p>
               <ResultsTable
                 data={leads}

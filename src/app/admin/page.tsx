@@ -1,9 +1,15 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import Link from "next/link"
-import { Users, Inbox, Settings, ArrowRight, Database } from "lucide-react"
-import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Users, Inbox, Settings, ArrowRight, Database, Lock } from "lucide-react"
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+
+const ADMIN_PASSWORD = "access"
+const STORAGE_KEY = "admin_access_granted"
 
 interface NavCard {
   title: string
@@ -40,6 +46,73 @@ const NAV_CARDS: NavCard[] = [
 ]
 
 export default function AdminPage() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [password, setPassword] = useState("")
+  const [error, setError] = useState("")
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    // Check if already authenticated this session
+    const granted = sessionStorage.getItem(STORAGE_KEY)
+    if (granted === "true") {
+      setIsAuthenticated(true)
+    }
+    setIsLoading(false)
+  }, [])
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (password === ADMIN_PASSWORD) {
+      sessionStorage.setItem(STORAGE_KEY, "true")
+      setIsAuthenticated(true)
+      setError("")
+    } else {
+      setError("Incorrect password")
+      setPassword("")
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-muted-foreground">Loading...</div>
+      </div>
+    )
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <Card className="w-full max-w-sm">
+          <CardHeader className="text-center">
+            <div className="mx-auto p-3 rounded-full bg-secondary w-fit mb-2">
+              <Lock className="h-6 w-6 text-muted-foreground" />
+            </div>
+            <CardTitle>Admin Access</CardTitle>
+            <CardDescription>Enter password to continue</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <Input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoFocus
+              />
+              {error && (
+                <p className="text-sm text-red-500">{error}</p>
+              )}
+              <Button type="submit" className="w-full">
+                Continue
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Header */}

@@ -98,7 +98,7 @@ export function SidebarShell({
           {title ?? (
             <Link
               href="/admin"
-              className="text-base font-semibold tracking-tight text-foreground hover:text-primary transition-colors"
+              className="text-base font-semibold tracking-tight text-foreground hover:text-foreground/80 transition-colors"
             >
               Revenue Activation
             </Link>
@@ -147,11 +147,17 @@ function DefaultHeaderActions({
   onToggle?: () => void
   onLockChange?: (locked: boolean) => void
 }) {
+  const handleCollapse = () => {
+    // Unlock and collapse the sidebar
+    if (onLockChange) onLockChange(false)
+    if (onToggle) onToggle()
+  }
+
   return (
     <div className="flex items-center gap-1">
       {onToggle && (
         <button
-          onClick={onToggle}
+          onClick={handleCollapse}
           className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
           title="Collapse sidebar"
         >

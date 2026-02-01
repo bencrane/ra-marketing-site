@@ -5,7 +5,19 @@ export function middleware(request: NextRequest) {
   const hostname = request.headers.get("host") || "";
   const { pathname } = request.nextUrl;
 
-  // Handle hq.radarrevenue.com subdomain
+  // Handle demo.* subdomain (demo.radarrevenue.com, demo.revenueactivation.com)
+  if (hostname.startsWith("demo.")) {
+    // Already on /hq/demo path, allow through
+    if (pathname.startsWith("/hq/demo")) {
+      return NextResponse.next();
+    }
+    // Rewrite paths to /hq/demo prefix (e.g., /1 -> /hq/demo/1, / -> /hq/demo)
+    const url = request.nextUrl.clone();
+    url.pathname = pathname === "/" ? "/hq/demo" : `/hq/demo${pathname}`;
+    return NextResponse.rewrite(url);
+  }
+
+  // Handle hq.* subdomain (hq.radarrevenue.com, hq.revenueactivation.com)
   if (hostname.startsWith("hq.")) {
     // Already on /hq path, allow through
     if (pathname.startsWith("/hq")) {
