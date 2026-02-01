@@ -23,6 +23,9 @@ interface UseLeadsParams {
   company_name?: string | null;
   company_domain?: string | null;
 
+  // Business Model Filter
+  business_model?: string | null; // "B2B", "B2C", or "Both"
+
   // Person Filters
   job_function?: string | null;
   seniority?: string | null;
@@ -52,6 +55,7 @@ export function useLeads(params: UseLeadsParams) {
   if (params.employee_range) queryParams.set("employee_range", params.employee_range);
   if (params.company_name) queryParams.set("company_name", params.company_name);
   if (params.company_domain) queryParams.set("company_domain", params.company_domain);
+  if (params.business_model) queryParams.set("business_model", params.business_model);
 
   // Add person filters
   if (params.job_function) queryParams.set("job_function", params.job_function);

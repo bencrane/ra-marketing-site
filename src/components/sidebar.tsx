@@ -117,6 +117,11 @@ export function Sidebar() {
   const [recentlyRaised, setRecentlyRaised] = useQueryState('recently_raised', parseAsBoolean)
   const [rapidGrowth, setRapidGrowth] = useQueryState('rapid_growth', parseAsBoolean)
 
+  // Ad Platform Signals (URL Synced)
+  const [runningLinkedInAds, setRunningLinkedInAds] = useQueryState('running_linkedin_ads', parseAsBoolean)
+  const [runningMetaAds, setRunningMetaAds] = useQueryState('running_meta_ads', parseAsBoolean)
+  const [runningGoogleAds, setRunningGoogleAds] = useQueryState('running_google_ads', parseAsBoolean)
+
   const signOutButton = (
     <button
       onClick={() => {
@@ -346,6 +351,24 @@ export function Sidebar() {
                 checked={workedAtCustomer || false}
                 onCheckedChange={(v) => setWorkedAtCustomer(v ? true : null)}
               />
+              <SignalCheckbox
+                id="running-linkedin-ads"
+                label="Running LinkedIn Ads"
+                checked={runningLinkedInAds || false}
+                onCheckedChange={(v) => setRunningLinkedInAds(v ? true : null)}
+              />
+              <SignalCheckbox
+                id="running-meta-ads"
+                label="Running Meta Ads"
+                checked={runningMetaAds || false}
+                onCheckedChange={(v) => setRunningMetaAds(v ? true : null)}
+              />
+              <SignalCheckbox
+                id="running-google-ads"
+                label="Running Google Ads"
+                checked={runningGoogleAds || false}
+                onCheckedChange={(v) => setRunningGoogleAds(v ? true : null)}
+              />
             </CollapsibleContent>
           </Collapsible>
 
@@ -543,7 +566,8 @@ export function Sidebar() {
             </CollapsibleContent>
           </Collapsible>
 
-          {/* PAYMENTS DATA Section */}
+          {/* PAYMENTS DATA Section - Hidden until backend ready */}
+          {false && (
           <Collapsible open={isPaymentsOpen} onOpenChange={setIsPaymentsOpen}>
             <CollapsibleTrigger asChild>
               <button className="w-full flex items-center justify-between py-2 group">
@@ -563,8 +587,10 @@ export function Sidebar() {
               />
             </CollapsibleContent>
           </Collapsible>
+          )}
 
-          {/* PUBLIC FILINGS Section */}
+          {/* PUBLIC FILINGS Section - Hidden until backend ready */}
+          {false && (
           <Collapsible open={isPublicFilingsOpen} onOpenChange={setIsPublicFilingsOpen}>
             <CollapsibleTrigger asChild>
               <button className="w-full flex items-center justify-between py-2 group">
@@ -584,6 +610,7 @@ export function Sidebar() {
               />
             </CollapsibleContent>
           </Collapsible>
+          )}
 
         </div>
     </SidebarShell>

@@ -109,6 +109,11 @@ export function useFilterState() {
   const [companyName, setCompanyName] = useQueryState("company_name")
   const [companyDomain, setCompanyDomain] = useQueryState("company_domain")
 
+  // Business Model filters (B2B/B2C)
+  const [isB2B, setIsB2B] = useQueryState("is_b2b", parseAsBoolean)
+  const [isB2C, setIsB2C] = useQueryState("is_b2c", parseAsBoolean)
+  const [isB2Both, setIsB2Both] = useQueryState("is_b2b_and_b2c", parseAsBoolean)
+
   // Person filters
   const [jobFunction, setJobFunction] = useQueryState("job_function")
   const [seniority, setSeniority] = useQueryState("seniority")
@@ -119,6 +124,14 @@ export function useFilterState() {
   const [personCountry, setPersonCountry] = useQueryState("person_country")
   const [personState, setPersonState] = useQueryState("person_state")
   const [personCity, setPersonCity] = useQueryState("person_city")
+
+  // Convert B2B/B2C boolean flags to single business_model value
+  const getBusinessModel = (): string | null => {
+    if (isB2Both) return "Both"
+    if (isB2B) return "B2B"
+    if (isB2C) return "B2C"
+    return null
+  }
 
   // All filters as object (for passing to useLeads)
   const filters = {
@@ -135,6 +148,8 @@ export function useFilterState() {
     employee_range: employeeRange,
     company_name: companyName,
     company_domain: companyDomain,
+    // Business Model
+    business_model: getBusinessModel(),
     // Person
     job_function: jobFunction,
     seniority,
@@ -190,6 +205,9 @@ export function useFilterState() {
     setEmployeeRange(null)
     setCompanyName(null)
     setCompanyDomain(null)
+    setIsB2B(null)
+    setIsB2C(null)
+    setIsB2Both(null)
     setJobFunction(null)
     setSeniority(null)
     setJobTitle(null)
