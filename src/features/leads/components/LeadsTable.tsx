@@ -215,7 +215,7 @@ export function DataTable<TData, TValue>({
   }
 
   return (
-    <div className="border border-border bg-card rounded-lg overflow-hidden">
+    <div className="border border-border bg-card rounded-lg overflow-x-auto">
       <Table className="table-premium" style={{ width: table.getCenterTotalSize(), tableLayout: 'fixed' }}>
         <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
