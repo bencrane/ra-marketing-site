@@ -1,10 +1,18 @@
-import useSWR from "swr";
+import useSWR, { preload } from "swr";
 import { fetcher, API_BASE_URL } from "@/lib/api";
 import { components } from "@/api/types";
 
 // Types from your OpenAPI spec
 export type Lead = components["schemas"]["Lead"];
 export type PaginationMeta = components["schemas"]["PaginationMeta"];
+
+// Default leads URL for preloading
+const DEFAULT_LEADS_URL = `${API_BASE_URL}/api/leads/quick?limit=50`;
+
+// Preload default leads immediately when this module loads
+if (typeof window !== "undefined") {
+  preload(DEFAULT_LEADS_URL, fetcher);
+}
 
 interface UseLeadsParams {
   limit?: number;
@@ -43,7 +51,8 @@ interface UseLeadsParams {
 
 export function useLeads(params: UseLeadsParams) {
   // Determine which endpoint to use based on the selected Signal
-  let endpoint = `${API_BASE_URL}/api/leads`;
+  // Use /api/leads/quick for faster response (skips expensive count query)
+  let endpoint = `${API_BASE_URL}/api/leads/quick`;
   const queryParams = new URLSearchParams();
 
   // Add pagination
@@ -86,11 +95,23 @@ export function useLeads(params: UseLeadsParams) {
 
   const url = `${endpoint}?${queryParams.toString()}`;
 
-  const { data, error, isLoading } = useSWR(url, fetcher);
+  const { data, error, isLoading } = useSWR(url, fetcher, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    dedupingInterval: 60000, // 1 minute deduping
+    keepPreviousData: true,
+  });
+
+  // Quick endpoint doesn't return meta, so estimate from data length
+  const leads = (data?.data as Lead[]) || [];
 
   return {
-    leads: (data?.data as Lead[]) || [],
-    meta: (data?.meta as PaginationMeta) || { total: 0, limit: 50, offset: 0 },
+    leads,
+    meta: (data?.meta as PaginationMeta) || {
+      total: leads.length,
+      limit: params.limit || 50,
+      offset: params.offset || 0
+    },
     isLoading,
     isError: error,
   };
