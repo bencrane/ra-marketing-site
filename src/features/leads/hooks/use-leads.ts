@@ -95,7 +95,7 @@ export function useLeads(params: UseLeadsParams) {
 
   const url = `${endpoint}?${queryParams.toString()}`;
 
-  const { data, error, isLoading } = useSWR(url, fetcher, {
+  const { data, error, isLoading, isValidating } = useSWR(url, fetcher, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
     dedupingInterval: 60000, // 1 minute deduping
@@ -105,6 +105,10 @@ export function useLeads(params: UseLeadsParams) {
   // Quick endpoint doesn't return meta, so estimate from data length
   const leads = (data?.data as Lead[]) || [];
 
+  // Only show loading skeleton on true first load (no data at all)
+  // When switching filters, we have stale data from keepPreviousData
+  const showLoading = isLoading && leads.length === 0;
+
   return {
     leads,
     meta: (data?.meta as PaginationMeta) || {
@@ -112,7 +116,8 @@ export function useLeads(params: UseLeadsParams) {
       limit: params.limit || 50,
       offset: params.offset || 0
     },
-    isLoading,
+    isLoading: showLoading,
+    isValidating,
     isError: error,
   };
 }
