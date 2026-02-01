@@ -14,7 +14,7 @@ export interface ToolbarSettings {
 
 const DEFAULT_SETTINGS: ToolbarSettings = {
   showViewToggle: true,
-  showInbox: true,
+  showInbox: false,
   showSignOut: true,
   showAiSearch: true,
   showViewLists: true,

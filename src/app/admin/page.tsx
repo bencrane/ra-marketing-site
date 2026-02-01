@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Users, Inbox, Settings, ArrowRight } from "lucide-react"
+import { Users, Inbox, Settings, ArrowRight, Database } from "lucide-react"
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 
@@ -30,6 +30,12 @@ const NAV_CARDS: NavCard[] = [
     description: "Configure which items appear in the leads page toolbar",
     href: "/admin/settings",
     icon: <Settings className="h-6 w-6" />,
+  },
+  {
+    title: "Data Gaps",
+    description: "Identify and analyze data quality gaps across tables",
+    href: "/admin/gaps",
+    icon: <Database className="h-6 w-6" />,
   },
 ]
 

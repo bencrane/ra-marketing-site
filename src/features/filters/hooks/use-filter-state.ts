@@ -241,7 +241,7 @@ export function useFilterState() {
     activeFilters.push({
       key: "at_vc_portfolio",
       label: "Signal",
-      value: "At VC Portfolio",
+      value: "Shared VC",
       onRemove: () => setAtVcPortfolio(null),
     })
   }

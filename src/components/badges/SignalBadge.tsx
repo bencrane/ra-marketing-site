@@ -34,7 +34,7 @@ const signalConfig: Record<SignalType, { label: string; className: string; descr
     description: "Promoted within the last 180 days",
   },
   atVcPortfolio: {
-    label: "At VC Portfolio",
+    label: "Shared VC",
     className: "badge-vc",
     description: "Works at a VC portfolio company",
   },

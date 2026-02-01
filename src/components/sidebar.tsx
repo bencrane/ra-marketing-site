@@ -105,6 +105,7 @@ export function Sidebar() {
 
   // Hiring (URL Synced)
   const [hiringFor, setHiringFor] = useQueryState('hiring_for')
+  const [hiringJobTitle, setHiringJobTitle] = useQueryState('hiring_job_title')
 
   // Payments Data (URL Synced)
   const [paymentsData, setPaymentsData] = useQueryState('payments_data')
@@ -335,7 +336,7 @@ export function Sidebar() {
               />
               <SignalCheckbox
                 id="at-vc-portfolio"
-                label="At VC Portfolio"
+                label="Shared VC"
                 checked={atVcPortfolio || false}
                 onCheckedChange={(v) => setAtVcPortfolio(v ? true : null)}
               />
@@ -439,11 +440,13 @@ export function Sidebar() {
               </button>
             </CollapsibleTrigger>
             <CollapsibleContent className="space-y-3 pt-2 pb-2">
-              <FilterField
+              <FilterFieldWithSearch
                 label="Tech Stack"
                 placeholder="e.g. Salesforce, Snowflake"
                 value={technologies}
                 onValueChange={setTechnologies}
+                endpoint="/api/filters/technologies"
+                displayKey="name"
               />
             </CollapsibleContent>
           </Collapsible>
@@ -524,10 +527,18 @@ export function Sidebar() {
             </CollapsibleTrigger>
             <CollapsibleContent className="space-y-3 pt-2 pb-2">
               <FilterField
-                label="Hiring For"
+                label="Department"
                 placeholder="e.g. Engineering, Sales"
                 value={hiringFor}
                 onValueChange={setHiringFor}
+              />
+              <FilterFieldWithSearch
+                label="Job Title"
+                placeholder="e.g. Software Engineer, SDR"
+                value={hiringJobTitle}
+                onValueChange={setHiringJobTitle}
+                endpoint="/api/filters/job-titles"
+                displayKey="name"
               />
             </CollapsibleContent>
           </Collapsible>
@@ -687,6 +698,125 @@ function FilterFieldWithSuggestions({
         />
         {showSuggestions && suggestions.length > 0 && (
           <div className="absolute z-50 w-full mt-1 bg-popover border border-border rounded-md shadow-lg max-h-48 overflow-auto">
+            {suggestions.map((opt) => (
+              <button
+                key={opt}
+                type="button"
+                className="w-full px-3 py-2 text-left text-xs text-popover-foreground hover:bg-secondary transition-colors"
+                onMouseDown={() => addValue(opt)}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// For search-as-you-type fields with API autocomplete
+function FilterFieldWithSearch({
+  label,
+  placeholder,
+  value,
+  onValueChange,
+  endpoint,
+  displayKey = "name",
+}: {
+  label: string;
+  placeholder: string;
+  value: string | null;
+  onValueChange: (val: string | null) => void;
+  endpoint: string;
+  displayKey?: string;
+}) {
+  const [inputValue, setInputValue] = React.useState("")
+  const [showSuggestions, setShowSuggestions] = React.useState(false)
+  const [debouncedQuery, setDebouncedQuery] = React.useState("")
+  const inputRef = React.useRef<HTMLInputElement>(null)
+
+  // Debounce the search query
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(inputValue)
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [inputValue])
+
+  // Fetch suggestions when query changes
+  const { data } = useSWR<Array<Record<string, string>>>(
+    debouncedQuery.length >= 2 ? `${endpoint}?q=${encodeURIComponent(debouncedQuery)}` : null,
+    fetcher
+  )
+
+  const suggestions = data?.map(item => item[displayKey]).filter(Boolean).slice(0, 8) || []
+
+  // Parse comma-separated values into array
+  const values = value ? value.split(',').map(v => v.trim()).filter(Boolean) : []
+
+  const addValue = (newValue: string) => {
+    if (!values.includes(newValue)) {
+      const newValues = [...values, newValue]
+      onValueChange(newValues.join(','))
+    }
+    setInputValue("")
+    setShowSuggestions(false)
+    setDebouncedQuery("")
+  }
+
+  const removeValue = (valueToRemove: string) => {
+    const newValues = values.filter(v => v !== valueToRemove)
+    onValueChange(newValues.length > 0 ? newValues.join(',') : null)
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && inputValue.trim()) {
+      e.preventDefault()
+      addValue(inputValue.trim())
+    }
+  }
+
+  return (
+    <div className="space-y-2">
+      <Label className="text-xs font-medium text-muted-foreground">{label}</Label>
+      {values.length > 0 && (
+        <div className="flex flex-wrap gap-1.5">
+          {values.map((v) => (
+            <span
+              key={v}
+              className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-secondary text-secondary-foreground rounded-md"
+            >
+              {v}
+              <button
+                type="button"
+                onClick={() => removeValue(v)}
+                className="opacity-70 hover:opacity-100 transition-opacity"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
+      <div className="relative">
+        <Input
+          ref={inputRef}
+          autoComplete="off"
+          data-form-type="other"
+          className="h-8 text-xs bg-input/30 border-border text-foreground placeholder:text-muted-foreground focus-visible:ring-ring focus-visible:border-ring"
+          placeholder={placeholder}
+          value={inputValue}
+          onChange={(e) => {
+            setInputValue(e.target.value)
+            setShowSuggestions(true)
+          }}
+          onFocus={() => setShowSuggestions(true)}
+          onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+          onKeyDown={handleKeyDown}
+        />
+        {showSuggestions && suggestions.length > 0 && (
+          <div className="absolute z-50 w-full mt-1 py-1 bg-popover border border-border rounded-md shadow-lg max-h-48 overflow-y-auto">
             {suggestions.map((opt) => (
               <button
                 key={opt}
