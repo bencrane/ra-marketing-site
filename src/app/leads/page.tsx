@@ -117,7 +117,7 @@ function LeadsPageInner() {
     <div className="flex min-h-screen bg-background text-foreground">
       <Sidebar />
       <main className={cn(
-        "flex-1 flex flex-col h-screen overflow-hidden transition-[margin] duration-200",
+        "flex-1 flex flex-col h-screen overflow-x-auto overflow-y-hidden transition-[margin] duration-200",
         isCollapsed ? "ml-12" : "ml-[280px]"
       )}>
         {/* Header Bar - matches sidebar header */}
@@ -419,7 +419,7 @@ function LeadsPageSkeleton() {
   return (
     <div className="flex min-h-screen bg-background text-foreground">
       <div className="fixed left-0 top-0 h-screen w-[280px] border-r border-border bg-sidebar z-30" />
-      <main className="ml-[280px] flex-1 flex flex-col h-screen overflow-hidden">
+      <main className="ml-[280px] flex-1 flex flex-col h-screen overflow-x-auto overflow-y-hidden">
         {/* Header Bar Skeleton */}
         <div className="h-14 flex items-center px-6 border-b border-border">
           <Skeleton className="h-4 w-24 bg-muted/50" />
