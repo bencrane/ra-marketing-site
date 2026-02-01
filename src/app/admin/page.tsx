@@ -118,7 +118,7 @@ export default function AdminPage() {
       {/* Header */}
       <header className="border-b border-border">
         <div className="max-w-5xl mx-auto px-6 py-6">
-          <h1 className="text-lg font-bold tracking-tight text-foreground">Revenue Activation</h1>
+          <h1 className="text-lg font-bold tracking-tight text-foreground">Radar Revenue</h1>
           <p className="text-sm text-muted-foreground mt-1">Admin Dashboard</p>
         </div>
       </header>
