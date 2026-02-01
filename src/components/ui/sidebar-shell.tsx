@@ -98,7 +98,7 @@ export function SidebarShell({
           {title ?? (
             <Link
               href="/admin"
-              className="text-base font-semibold tracking-tight text-foreground hover:text-foreground/80 transition-colors"
+              className="text-base font-semibold tracking-tight text-foreground"
             >
               Revenue Activation
             </Link>
