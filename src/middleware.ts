@@ -6,14 +6,15 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Handle demo.* subdomain (demo.radarrevenue.com, demo.revenueactivation.com)
+  // Routes to the main leads page (same as app.radarrevenue.com/leads)
   if (hostname.startsWith("demo.")) {
-    // Already on /hq/demo path, allow through
-    if (pathname.startsWith("/hq/demo")) {
+    // Already on /leads path, allow through
+    if (pathname.startsWith("/leads")) {
       return NextResponse.next();
     }
-    // Rewrite paths to /hq/demo prefix (e.g., /1 -> /hq/demo/1, / -> /hq/demo/1)
+    // Rewrite root to /leads
     const url = request.nextUrl.clone();
-    url.pathname = pathname === "/" ? "/hq/demo/1" : `/hq/demo${pathname}`;
+    url.pathname = pathname === "/" ? "/leads" : pathname;
     return NextResponse.rewrite(url);
   }
 
