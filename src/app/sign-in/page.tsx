@@ -74,7 +74,7 @@ export default function SignInPage() {
       {/* Logo / Brand */}
       <div className="mb-10">
         <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          Radar Revenue
+          Revenue Activation
         </h1>
       </div>
 

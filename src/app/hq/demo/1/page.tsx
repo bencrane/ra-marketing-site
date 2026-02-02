@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Building2, Users, Briefcase, Target, FileText } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import {
@@ -30,24 +31,6 @@ interface CompanyICP {
   icp_employee_ranges: string[]
   icp_countries: string[]
   value_proposition: ValueProposition | string | null
-}
-
-interface Lead {
-  person_id: string
-  full_name: string
-  linkedin_url: string
-  matched_cleaned_job_title: string
-  matched_job_function: string
-  matched_seniority: string
-  person_city: string
-  person_state: string
-  person_country: string
-  company_domain: string
-  company_name: string
-  matched_industry: string
-  employee_range: string
-  company_country: string
-  [key: string]: string | undefined
 }
 
 interface Customer {
@@ -85,17 +68,8 @@ const CUSTOMER_COLUMNS: TableColumn<Customer>[] = [
   },
 ]
 
-const LEAD_COLUMNS: TableColumn<Lead>[] = [
-  { key: "full_name", label: "Name", width: "18%" },
-  { key: "matched_cleaned_job_title", label: "Title", width: "18%" },
-  { key: "company_name", label: "Company", width: "16%" },
-  { key: "matched_industry", label: "Industry", width: "16%" },
-  { key: "matched_seniority", label: "Seniority", width: "10%" },
-  { key: "employee_range", label: "Size", width: "10%" },
-  { key: "person_country", label: "Location", width: "12%" },
-]
-
 export default function Demo1Page() {
+  const router = useRouter()
   const [domain, setDomain] = useState("")
   const [savedDomain, setSavedDomain] = useState<string | null>(null)
 
@@ -108,61 +82,13 @@ export default function Demo1Page() {
   const [isLoadingCustomers, setIsLoadingCustomers] = useState(false)
   const [showCustomers, setShowCustomers] = useState(false)
 
-  // Leads state
-  const [leads, setLeads] = useState<Lead[]>([])
-  const [isLoadingLeads, setIsLoadingLeads] = useState(false)
-  const [showLeads, setShowLeads] = useState(false)
-
   const [error, setError] = useState<string | null>(null)
 
-  // Step 3: Fetch leads with ICP filter presets
-  const handleFindPeople = async () => {
-    if (!companyICP) return
-
-    setIsLoadingLeads(true)
-    setError(null)
-
-    try {
-      const params = new URLSearchParams()
-      params.set("limit", "2000")
-
-      // Map ICP data to filter params
-      if (companyICP.icp_industries?.length > 0) {
-        params.set("industry", companyICP.icp_industries.join(","))
-      }
-      if (companyICP.icp_seniorities?.length > 0) {
-        params.set("seniority", companyICP.icp_seniorities.join(","))
-      }
-      if (companyICP.icp_job_functions?.length > 0) {
-        params.set("job_function", companyICP.icp_job_functions.join(","))
-      }
-      if (companyICP.icp_employee_ranges?.length > 0) {
-        params.set("employee_range", companyICP.icp_employee_ranges.join(","))
-      }
-      if (companyICP.icp_countries?.length > 0) {
-        params.set("company_country", companyICP.icp_countries.join(","))
-      }
-
-      console.log("Leads Request:", `https://api.revenueinfra.com/api/leads/quick?${params.toString()}`)
-
-      const response = await fetch(
-        `https://api.revenueinfra.com/api/leads/quick?${params.toString()}`
-      )
-
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status}`)
-      }
-
-      const data = await response.json()
-      console.log("Leads Response:", data)
-
-      setLeads(data.data || [])
-      setShowLeads(true)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to fetch leads")
-    } finally {
-      setIsLoadingLeads(false)
-    }
+  // Step 3: Navigate to leads page with company filter
+  const handleFindPeople = () => {
+    if (!savedDomain) return
+    // Navigate to the main leads page with the company domain as a filter
+    router.push(`/leads?company=${encodeURIComponent(savedDomain)}`)
   }
 
   // Step 1: Fetch company ICP info
@@ -349,43 +275,14 @@ export default function Demo1Page() {
             getRowKey={(c) => c.domain}
           />
 
-          {!showLeads && (
-            <CTACard
-              icon={<Users className="h-4 w-4 text-primary" />}
-              title="Ready to find ICP-matched leads?"
-              description="We'll search for leads matching this company's ICP criteria."
-              buttonLabel={isLoadingLeads ? "Loading..." : "Find People"}
-              onAction={handleFindPeople}
-              disabled={isLoadingLeads}
-              className="mt-6"
-            />
-          )}
-
-          {/* Leads Results */}
-          {showLeads && leads.length > 0 && (
-            <div className="mt-6">
-              <h2 className="text-base font-semibold mb-1">ICP-Matched Leads</h2>
-              <p className="text-xs text-muted-foreground mb-4">
-                Showing {leads.length.toLocaleString()} leads matching {companyICP?.company_name || savedDomain}&apos;s ICP criteria
-              </p>
-              <ResultsTable
-                data={leads}
-                columns={LEAD_COLUMNS}
-                getRowKey={(l) => l.person_id}
-                maxHeight="400px"
-              />
-            </div>
-          )}
-
-          {showLeads && leads.length === 0 && (
-            <Card className="mt-6">
-              <CardContent className="p-8 text-center">
-                <p className="text-sm text-muted-foreground">
-                  No leads found matching the ICP criteria.
-                </p>
-              </CardContent>
-            </Card>
-          )}
+          <CTACard
+            icon={<Users className="h-4 w-4 text-primary" />}
+            title="Ready to find ICP-matched leads?"
+            description="We'll search for leads matching this company's ICP criteria."
+            buttonLabel="Find People"
+            onAction={handleFindPeople}
+            className="mt-6"
+          />
         </div>
       )}
     </DemoPageLayout>

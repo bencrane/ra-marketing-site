@@ -21,7 +21,7 @@ interface TargetCompanyPanelProps {
   className?: string
 }
 
-// Mock data for demo - will be replaced with API call
+// Fetch real ICP data from the API
 function useCompanyData(domain: string): { data: TargetCompanyData | null; isLoading: boolean } {
   const [data, setData] = React.useState<TargetCompanyData | null>(null)
   const [isLoading, setIsLoading] = React.useState(true)
@@ -29,25 +29,88 @@ function useCompanyData(domain: string): { data: TargetCompanyData | null; isLoa
   React.useEffect(() => {
     setIsLoading(true)
 
-    // Simulate API delay
-    const timer = setTimeout(() => {
-      // Mock data based on domain - replace with actual API call
-      const mockData: TargetCompanyData = {
-        companyDomain: domain,
-        companyName: formatDomainToName(domain),
-        description: `We help ${formatDomainToName(domain)} sell to decision makers in their target market. Our AI identifies high-intent buyers based on job changes, funding signals, and technology adoption patterns.`,
-        criteria: [
-          { label: "Employee Size", value: "51-500", icon: "employees" },
-          { label: "Series", value: "Series A-C", icon: "series" },
-          { label: "Signal", value: "New in Role", icon: "signal" },
-          { label: "Tech Stack", value: "Salesforce, HubSpot", icon: "tech" },
-        ],
-      }
-      setData(mockData)
-      setIsLoading(false)
-    }, 300)
+    const fetchICP = async () => {
+      try {
+        const response = await fetch(
+          `https://api.revenueinfra.com/api/companies/${encodeURIComponent(domain)}/icp`
+        )
 
-    return () => clearTimeout(timer)
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`)
+        }
+
+        const icpData = await response.json()
+
+        if (icpData.success === false) {
+          throw new Error(icpData.error || "No ICP data found")
+        }
+
+        // Build criteria array from ICP data
+        const criteria: TargetCompanyData["criteria"] = []
+
+        if (icpData.icp_employee_ranges?.length > 0) {
+          criteria.push({
+            label: "Employee Size",
+            value: icpData.icp_employee_ranges.join(", "),
+            icon: "employees",
+          })
+        }
+
+        if (icpData.icp_industries?.length > 0) {
+          criteria.push({
+            label: "Industries",
+            value: icpData.icp_industries.slice(0, 3).join(", ") + (icpData.icp_industries.length > 3 ? "..." : ""),
+            icon: "tech",
+          })
+        }
+
+        if (icpData.icp_seniorities?.length > 0) {
+          criteria.push({
+            label: "Seniority",
+            value: icpData.icp_seniorities.join(", "),
+            icon: "signal",
+          })
+        }
+
+        if (icpData.icp_countries?.length > 0) {
+          criteria.push({
+            label: "Countries",
+            value: icpData.icp_countries.slice(0, 3).join(", ") + (icpData.icp_countries.length > 3 ? "..." : ""),
+            icon: "series",
+          })
+        }
+
+        // Extract description from value_proposition
+        let description = ""
+        if (icpData.value_proposition) {
+          if (typeof icpData.value_proposition === "string") {
+            description = icpData.value_proposition
+          } else if (icpData.value_proposition.value_proposition) {
+            description = icpData.value_proposition.value_proposition
+          } else if (icpData.value_proposition.core_benefit) {
+            description = icpData.value_proposition.core_benefit
+          }
+        }
+
+        setData({
+          companyDomain: domain,
+          companyName: icpData.company_name || formatDomainToName(domain),
+          description: description || undefined,
+          criteria: criteria.length > 0 ? criteria : undefined,
+        })
+      } catch (err) {
+        console.error("Failed to fetch ICP data:", err)
+        // Fallback to basic data on error
+        setData({
+          companyDomain: domain,
+          companyName: formatDomainToName(domain),
+        })
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchICP()
   }, [domain])
 
   return { data, isLoading }

@@ -100,7 +100,7 @@ export function SidebarShell({
               href="/admin"
               className="text-base font-semibold tracking-tight text-foreground"
             >
-              Radar Revenue
+              Revenue Activation
             </Link>
           )}
           {headerActions ?? (
