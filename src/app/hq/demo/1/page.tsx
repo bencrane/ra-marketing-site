@@ -105,12 +105,16 @@ export default function Demo1Page() {
     await startProcessing()
   }
 
-  // Watch for processing completion and navigate
+  // Watch for processing completion and navigate to demo subdomain
   useEffect(() => {
     if (isDone && savedDomain) {
-      router.push(`/leads?company=${encodeURIComponent(savedDomain)}`)
+      // Navigate to demo.revenueactivation.com with the company filter
+      // Using window.location to navigate across subdomains
+      const currentHost = window.location.host
+      const targetHost = currentHost.replace(/^hq\./, "demo.")
+      window.location.href = `${window.location.protocol}//${targetHost}/leads?company=${encodeURIComponent(savedDomain)}`
     }
-  }, [isDone, savedDomain, router])
+  }, [isDone, savedDomain])
 
   // Step 1: Fetch company ICP info
   const handleSearch = async () => {
