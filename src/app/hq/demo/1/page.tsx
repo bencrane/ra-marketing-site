@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Building2, Users, Briefcase, Target, FileText } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
@@ -9,8 +9,17 @@ import {
   DemoSearchCard,
   ResultsTable,
   CTACard,
+  ProcessingChecklist,
+  useProcessingSteps,
   type TableColumn,
 } from "../components"
+
+const PROCESSING_STEPS = [
+  "Loading your customers",
+  "Finding alumni matches",
+  "Filtering by ICP",
+  "Enriching contacts",
+]
 
 const API_BASE = "https://api.revenueinfra.com/api/companies"
 
@@ -84,12 +93,24 @@ export default function Demo1Page() {
 
   const [error, setError] = useState<string | null>(null)
 
-  // Step 3: Navigate to leads page with company filter
-  const handleFindPeople = () => {
+  // Processing animation state
+  const { isProcessing, completedSteps, isDone, startProcessing } = useProcessingSteps(
+    PROCESSING_STEPS,
+    1000
+  )
+
+  // Navigate to leads page after processing completes
+  const handleFindPeople = async () => {
     if (!savedDomain) return
-    // Navigate to the main leads page with the company domain as a filter
-    router.push(`/leads?company=${encodeURIComponent(savedDomain)}`)
+    await startProcessing()
   }
+
+  // Watch for processing completion and navigate
+  useEffect(() => {
+    if (isDone && savedDomain) {
+      router.push(`/leads?company=${encodeURIComponent(savedDomain)}`)
+    }
+  }, [isDone, savedDomain, router])
 
   // Step 1: Fetch company ICP info
   const handleSearch = async () => {
@@ -275,14 +296,24 @@ export default function Demo1Page() {
             getRowKey={(c) => c.domain}
           />
 
-          <CTACard
-            icon={<Users className="h-4 w-4 text-primary" />}
-            title="Ready to find ICP-matched leads?"
-            description="We'll search for leads matching this company's ICP criteria."
-            buttonLabel="Find People"
-            onAction={handleFindPeople}
-            className="mt-6"
-          />
+          {!isProcessing && !isDone && (
+            <CTACard
+              icon={<Users className="h-4 w-4 text-primary" />}
+              title="Ready to find ICP-matched leads?"
+              description="We'll search for leads matching this company's ICP criteria."
+              buttonLabel="Find People"
+              onAction={handleFindPeople}
+              className="mt-6"
+            />
+          )}
+
+          {isProcessing && !isDone && (
+            <ProcessingChecklist
+              steps={PROCESSING_STEPS}
+              completedSteps={completedSteps}
+              className="mt-6"
+            />
+          )}
         </div>
       )}
     </DemoPageLayout>
