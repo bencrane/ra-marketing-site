@@ -12,6 +12,9 @@ import {
   useProcessingSteps,
 } from "../components"
 
+// Toggle to enable/disable the processing animation
+const SHOW_PROCESSING_ANIMATION = false
+
 const PROCESSING_STEPS = [
   "Validating email format",
   "Enriching company data",
@@ -123,33 +126,52 @@ export default function Demo6Page() {
 
       {hasSearched && savedEmail && (
         <div>
-          {!isProcessing && !isDone && (
-            <CTACard
-              icon={<Users className="h-4 w-4 text-primary" />}
-              title="Ready to enrich this lead?"
-              description="We'll pull company data, score ICP fit, and identify relevant buying signals."
-              buttonLabel="Enrich Lead"
-              onAction={startProcessing}
-            />
+          {/* Processing animation - toggle SHOW_PROCESSING_ANIMATION to enable */}
+          {SHOW_PROCESSING_ANIMATION && (
+            <>
+              {!isProcessing && !isDone && (
+                <CTACard
+                  icon={<Users className="h-4 w-4 text-primary" />}
+                  title="Ready to enrich this lead?"
+                  description="We'll pull company data, score ICP fit, and identify relevant buying signals."
+                  buttonLabel="Enrich Lead"
+                  onAction={startProcessing}
+                />
+              )}
+
+              {isProcessing && !isDone && (
+                <ProcessingChecklist
+                  steps={PROCESSING_STEPS}
+                  completedSteps={completedSteps}
+                />
+              )}
+
+              {isDone && (
+                <div className="mt-6">
+                  <h2 className="text-base font-semibold mb-1">Enriched Lead</h2>
+                  <p className="text-xs text-muted-foreground mb-3">
+                    Full enrichment data for {savedEmail} (Client: {savedClientDomain})
+                  </p>
+                  <Card>
+                    <CardContent className="p-8 text-center">
+                      <p className="text-sm text-muted-foreground">
+                        Enrichment results will be displayed here.
+                      </p>
+                    </CardContent>
+                  </Card>
+                </div>
+              )}
+            </>
           )}
 
-          {isProcessing && !isDone && (
-            <ProcessingChecklist
-              steps={PROCESSING_STEPS}
-              completedSteps={completedSteps}
-            />
-          )}
-
-          {isDone && (
+          {/* Simple confirmation when animation is disabled */}
+          {!SHOW_PROCESSING_ANIMATION && (
             <div className="mt-6">
-              <h2 className="text-base font-semibold mb-1">Enriched Lead</h2>
-              <p className="text-xs text-muted-foreground mb-3">
-                Full enrichment data for {savedEmail} (Client: {savedClientDomain})
-              </p>
               <Card>
-                <CardContent className="p-8 text-center">
-                  <p className="text-sm text-muted-foreground">
-                    Enrichment results will be displayed here.
+                <CardContent className="p-6 text-center">
+                  <p className="text-sm text-foreground font-medium mb-1">Submitted!</p>
+                  <p className="text-xs text-muted-foreground">
+                    {savedEmail} (Client: {savedClientDomain})
                   </p>
                 </CardContent>
               </Card>
