@@ -42,19 +42,24 @@ export default function Demo6Page() {
     setIsSubmitting(true)
 
     try {
+      const payload = {
+        client_domain: trimmedDomain,
+        work_email: trimmedEmail,
+      }
+      console.log("Sending to Clay webhook:", payload)
+
       await fetch(
         "https://api.clay.com/v3/sources/webhook/pull-in-data-from-a-webhook-30cc564d-a53b-438c-9b43-6b56eb12f773",
         {
           method: "POST",
+          mode: "no-cors",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            client_domain: trimmedDomain,
-            work_email: trimmedEmail,
-          }),
+          body: JSON.stringify(payload),
         }
       )
+      console.log("Clay webhook request sent")
     } catch (err) {
       console.error("Failed to send to Clay webhook:", err)
     } finally {
