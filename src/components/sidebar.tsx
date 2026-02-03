@@ -683,6 +683,17 @@ function FilterFieldWithSuggestions({
     onValueChange(newValues.length > 0 ? newValues.join(',') : null)
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && inputValue.trim()) {
+      e.preventDefault()
+      // If there's a matching suggestion, use it; otherwise use the input as-is
+      const match = availableOptions.find(opt =>
+        opt.toLowerCase() === inputValue.trim().toLowerCase()
+      )
+      addValue(match || inputValue.trim())
+    }
+  }
+
   return (
     <div className="space-y-2">
       <Label className="text-xs font-medium text-muted-foreground">{label}</Label>
@@ -722,6 +733,7 @@ function FilterFieldWithSuggestions({
             // Delay to allow click on suggestion
             setTimeout(() => setShowSuggestions(false), 150)
           }}
+          onKeyDown={handleKeyDown}
         />
         {showSuggestions && suggestions.length > 0 && (
           <div className="absolute z-50 w-full mt-1 bg-popover border border-border rounded-md shadow-lg max-h-48 overflow-auto">
