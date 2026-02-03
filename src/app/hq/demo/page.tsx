@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { ArrowLeft, Users, ArrowRight, Clock, Globe, Upload, Sparkles } from "lucide-react"
+import { ArrowLeft, Users, ArrowRight, Clock, Globe, Upload, Sparkles, Inbox } from "lucide-react"
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 
 interface DemoCard {
@@ -47,6 +47,13 @@ const DEMO_CARDS: DemoCard[] = [
     description: "Lookalikes from scraping their site — find companies that match your best customers",
     icon: <Sparkles className="h-6 w-6" />,
     href: "/hq/demo/5",
+  },
+  {
+    id: "6",
+    title: "#6 Inbound Leads Enrichment",
+    description: "Enrich inbound leads with company data, ICP fit scoring, and buying signals",
+    icon: <Inbox className="h-6 w-6" />,
+    href: "/hq/demo/6",
   },
 ]
 
