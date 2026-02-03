@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 
-export default function SecurityPalInboundPage() {
+export default function SecurityPalOutboundTAMPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Header */}
@@ -11,7 +11,7 @@ export default function SecurityPalInboundPage() {
         <div className="max-w-5xl mx-auto px-6 py-6">
           <Link href="/hq/client-preview/securitypalhq" className="flex items-center gap-2 text-foreground hover:text-muted-foreground transition-colors">
             <ArrowLeft className="h-4 w-4" />
-            <span className="font-medium">Inbound Leads</span>
+            <span className="font-medium">Outbound TAM</span>
           </Link>
         </div>
       </header>
