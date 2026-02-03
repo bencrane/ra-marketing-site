@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { ArrowLeft, ArrowRight, Inbox } from "lucide-react"
+import { ArrowLeft, ArrowRight, Inbox, Users } from "lucide-react"
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 
 interface NavCard {
@@ -17,6 +17,12 @@ const NAV_CARDS: NavCard[] = [
     description: "Inbound leads enrichment data",
     href: "/hq/client-preview/securitypalhq/inbound",
     icon: <Inbox className="h-6 w-6" />,
+  },
+  {
+    title: "CRM Leads",
+    description: "CRM leads enrichment data",
+    href: "/hq/client-preview/securitypalhq/crm-leads",
+    icon: <Users className="h-6 w-6" />,
   },
 ]
 
