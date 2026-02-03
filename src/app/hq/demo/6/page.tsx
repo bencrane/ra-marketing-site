@@ -23,10 +23,18 @@ const PROCESSING_STEPS = [
 ]
 
 export default function Demo6Page() {
+  // Client config
   const [clientDomain, setClientDomain] = useState("")
-  const [email, setEmail] = useState("")
-  const [savedClientDomain, setSavedClientDomain] = useState<string | null>(null)
-  const [savedEmail, setSavedEmail] = useState<string | null>(null)
+
+  // Form fields (simulating inbound form)
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
+  const [businessEmail, setBusinessEmail] = useState("")
+  const [companyName, setCompanyName] = useState("")
+  const [phone, setPhone] = useState("")
+  const [message, setMessage] = useState("")
+
+  const [savedData, setSavedData] = useState<Record<string, string> | null>(null)
   const [hasSearched, setHasSearched] = useState(false)
 
   const { isProcessing, completedSteps, isDone, startProcessing } = useProcessingSteps(
@@ -37,18 +45,20 @@ export default function Demo6Page() {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleSearch = async () => {
-    const trimmedDomain = clientDomain.trim()
-    const trimmedEmail = email.trim()
+    const payload = {
+      client_domain: clientDomain.trim(),
+      first_name: firstName.trim(),
+      last_name: lastName.trim(),
+      business_email: businessEmail.trim(),
+      company_name: companyName.trim(),
+      phone: phone.trim(),
+      message: message.trim(),
+    }
 
-    setSavedClientDomain(trimmedDomain)
-    setSavedEmail(trimmedEmail)
+    setSavedData(payload)
     setIsSubmitting(true)
 
     try {
-      const payload = {
-        client_domain: trimmedDomain,
-        work_email: trimmedEmail,
-      }
       console.log("Sending to Clay webhook:", payload)
 
       const response = await fetch("/api/clay-webhook", {
@@ -69,7 +79,8 @@ export default function Demo6Page() {
     }
   }
 
-  const canSearch = clientDomain.trim() && email.trim()
+  // All fields optional now
+  const canSearch = true
 
   return (
     <DemoPageLayout>
@@ -87,42 +98,108 @@ export default function Demo6Page() {
 
         <Card className="w-full">
           <CardContent className="p-4 space-y-4">
+            {/* Client Domain - Required config */}
             <div className="space-y-2">
               <Label className="text-xs font-medium text-muted-foreground">Client Domain</Label>
               <Input
-                placeholder="e.g. stripe.com"
+                placeholder="e.g. securitypalhq.com"
                 value={clientDomain}
                 onChange={(e) => setClientDomain(e.target.value)}
                 className="h-10 text-sm bg-input/30 border-border"
               />
             </div>
+
+            {/* Divider */}
+            <div className="relative py-2">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-border" />
+              </div>
+              <div className="relative flex justify-center">
+                <span className="bg-card px-2 text-xs text-muted-foreground">
+                  Simulated Inbound Form Fields
+                </span>
+              </div>
+            </div>
+
+            {/* First Name */}
             <div className="space-y-2">
-              <Label className="text-xs font-medium text-muted-foreground">Work Email</Label>
+              <Label className="text-xs font-medium text-muted-foreground">First Name</Label>
               <Input
-                placeholder="e.g. john@acme.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && canSearch) {
-                    handleSearch()
-                  }
-                }}
+                placeholder="John"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
                 className="h-10 text-sm bg-input/30 border-border"
               />
             </div>
+
+            {/* Last Name */}
+            <div className="space-y-2">
+              <Label className="text-xs font-medium text-muted-foreground">Last Name</Label>
+              <Input
+                placeholder="Doe"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                className="h-10 text-sm bg-input/30 border-border"
+              />
+            </div>
+
+            {/* Business Email */}
+            <div className="space-y-2">
+              <Label className="text-xs font-medium text-muted-foreground">Business Email</Label>
+              <Input
+                placeholder="john@acme.com"
+                value={businessEmail}
+                onChange={(e) => setBusinessEmail(e.target.value)}
+                className="h-10 text-sm bg-input/30 border-border"
+              />
+            </div>
+
+            {/* Company Name */}
+            <div className="space-y-2">
+              <Label className="text-xs font-medium text-muted-foreground">Company Name</Label>
+              <Input
+                placeholder="Acme Inc"
+                value={companyName}
+                onChange={(e) => setCompanyName(e.target.value)}
+                className="h-10 text-sm bg-input/30 border-border"
+              />
+            </div>
+
+            {/* Phone */}
+            <div className="space-y-2">
+              <Label className="text-xs font-medium text-muted-foreground">Phone</Label>
+              <Input
+                placeholder="+1 (555) 123-4567"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="h-10 text-sm bg-input/30 border-border"
+              />
+            </div>
+
+            {/* Message */}
+            <div className="space-y-2">
+              <Label className="text-xs font-medium text-muted-foreground">Message</Label>
+              <textarea
+                placeholder="I'm interested in learning more..."
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                className="w-full min-h-[80px] px-3 py-2 text-sm bg-input/30 border border-border rounded-md text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              />
+            </div>
+
             <button
               onClick={handleSearch}
-              disabled={!canSearch || isSubmitting}
+              disabled={isSubmitting}
               className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-primary-foreground font-medium rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Search className="h-4 w-4" />
-              {isSubmitting ? "Submitting..." : "Search"}
+              {isSubmitting ? "Submitting..." : "Submit"}
             </button>
           </CardContent>
         </Card>
       </div>
 
-      {hasSearched && savedEmail && (
+      {hasSearched && savedData && (
         <div>
           {/* Processing animation - toggle SHOW_PROCESSING_ANIMATION to enable */}
           {SHOW_PROCESSING_ANIMATION && (
@@ -148,7 +225,7 @@ export default function Demo6Page() {
                 <div className="mt-6">
                   <h2 className="text-base font-semibold mb-1">Enriched Lead</h2>
                   <p className="text-xs text-muted-foreground mb-3">
-                    Full enrichment data for {savedEmail} (Client: {savedClientDomain})
+                    Full enrichment data (Client: {savedData.client_domain})
                   </p>
                   <Card>
                     <CardContent className="p-8 text-center">
@@ -169,7 +246,7 @@ export default function Demo6Page() {
                 <CardContent className="p-6 text-center">
                   <p className="text-sm text-foreground font-medium mb-1">Submitted!</p>
                   <p className="text-xs text-muted-foreground">
-                    {savedEmail} (Client: {savedClientDomain})
+                    {savedData.business_email || "No email"} (Client: {savedData.client_domain || "Not specified"})
                   </p>
                 </CardContent>
               </Card>
