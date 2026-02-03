@@ -31,10 +31,36 @@ export default function Demo6Page() {
     1000
   )
 
-  const handleSearch = () => {
-    setSavedClientDomain(clientDomain.trim())
-    setSavedEmail(email.trim())
-    setHasSearched(true)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const handleSearch = async () => {
+    const trimmedDomain = clientDomain.trim()
+    const trimmedEmail = email.trim()
+
+    setSavedClientDomain(trimmedDomain)
+    setSavedEmail(trimmedEmail)
+    setIsSubmitting(true)
+
+    try {
+      await fetch(
+        "https://api.clay.com/v3/sources/webhook/pull-in-data-from-a-webhook-30cc564d-a53b-438c-9b43-6b56eb12f773",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            client_domain: trimmedDomain,
+            work_email: trimmedEmail,
+          }),
+        }
+      )
+    } catch (err) {
+      console.error("Failed to send to Clay webhook:", err)
+    } finally {
+      setIsSubmitting(false)
+      setHasSearched(true)
+    }
   }
 
   const canSearch = clientDomain.trim() && email.trim()
@@ -80,11 +106,11 @@ export default function Demo6Page() {
             </div>
             <button
               onClick={handleSearch}
-              disabled={!canSearch}
+              disabled={!canSearch || isSubmitting}
               className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-primary-foreground font-medium rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Search className="h-4 w-4" />
-              Search
+              {isSubmitting ? "Submitting..." : "Search"}
             </button>
           </CardContent>
         </Card>
