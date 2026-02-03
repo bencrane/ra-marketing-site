@@ -51,18 +51,16 @@ export default function Demo6Page() {
       }
       console.log("Sending to Clay webhook:", payload)
 
-      await fetch(
-        "https://api.clay.com/v3/sources/webhook/pull-in-data-from-a-webhook-30cc564d-a53b-438c-9b43-6b56eb12f773",
-        {
-          method: "POST",
-          mode: "no-cors",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        }
-      )
-      console.log("Clay webhook request sent")
+      const response = await fetch("/api/clay-webhook", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      })
+
+      const result = await response.json()
+      console.log("Clay webhook response:", result)
     } catch (err) {
       console.error("Failed to send to Clay webhook:", err)
     } finally {
