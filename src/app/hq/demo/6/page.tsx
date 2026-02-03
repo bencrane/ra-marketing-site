@@ -25,7 +25,6 @@ const PROCESSING_STEPS = [
 export default function Demo6Page() {
   // Client config
   const [clientDomain, setClientDomain] = useState("")
-  const [formId, setFormId] = useState("")
 
   // Form fields (simulating inbound form)
   const [firstName, setFirstName] = useState("")
@@ -48,7 +47,6 @@ export default function Demo6Page() {
   const handleSearch = async () => {
     const payload = {
       client_domain: clientDomain.trim(),
-      form_id: formId.trim(),
       first_name: firstName.trim(),
       last_name: lastName.trim(),
       business_email: businessEmail.trim(),
@@ -107,17 +105,6 @@ export default function Demo6Page() {
                 placeholder="e.g. securitypalhq.com"
                 value={clientDomain}
                 onChange={(e) => setClientDomain(e.target.value)}
-                className="h-10 text-sm bg-input/30 border-border"
-              />
-            </div>
-
-            {/* Form ID */}
-            <div className="space-y-2">
-              <Label className="text-xs font-medium text-muted-foreground">Form ID</Label>
-              <Input
-                placeholder="e.g. contact-form-1"
-                value={formId}
-                onChange={(e) => setFormId(e.target.value)}
                 className="h-10 text-sm bg-input/30 border-border"
               />
             </div>
