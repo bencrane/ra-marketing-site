@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 
-const CLAY_WEBHOOK_URL = "https://api.clay.com/v3/sources/webhook/pull-in-data-from-a-webhook-30cc564d-a53b-438c-9b43-6b56eb12f773"
+const CLAY_WEBHOOK_URL = "https://api.clay.com/v3/sources/webhook/pull-in-data-from-a-webhook-7e198862-e9c0-436d-853b-e6c8c6caa534"
 
 export async function POST(request: NextRequest) {
   try {
