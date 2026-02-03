@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Presentation, ArrowRight, Eye } from "lucide-react"
+import { ArrowLeft, ArrowRight, Building2 } from "lucide-react"
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 
 interface NavCard {
@@ -13,27 +13,23 @@ interface NavCard {
 
 const NAV_CARDS: NavCard[] = [
   {
-    title: "Demo",
-    description: "Demo scenarios and use cases for customer presentations",
-    href: "/hq/demo",
-    icon: <Presentation className="h-6 w-6" />,
-  },
-  {
-    title: "Client Preview",
-    description: "Preview client dashboards and data",
-    href: "/hq/client-preview",
-    icon: <Eye className="h-6 w-6" />,
+    title: "securitypalhq.com",
+    description: "SecurityPal AI client dashboard",
+    href: "/hq/client-preview/securitypalhq",
+    icon: <Building2 className="h-6 w-6" />,
   },
 ]
 
-export default function HQPage() {
+export default function ClientPreviewPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Header */}
       <header className="border-b border-border">
         <div className="max-w-5xl mx-auto px-6 py-6">
-          <h1 className="text-lg font-bold tracking-tight text-foreground">HQ</h1>
-          <p className="text-sm text-muted-foreground mt-1">Internal Admin Dashboard</p>
+          <Link href="/hq" className="flex items-center gap-2 text-foreground hover:text-muted-foreground transition-colors">
+            <ArrowLeft className="h-4 w-4" />
+            <span className="font-medium">Client Preview</span>
+          </Link>
         </div>
       </header>
 
